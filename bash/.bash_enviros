@@ -1,0 +1,6 @@
+export GREP_COLOR=`echo $Purple | cut -c 4-7`
+
+export REMEETING=~/work/rmtg/src
+export RTOKEN=jWQTkq9XEbqmqyjMXAZ4VxpM
+
+export PATH=${PATH}:${HOME}/bin
