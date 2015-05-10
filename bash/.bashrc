@@ -43,23 +43,23 @@ set_prompt () {
     Last=$?
     PS1=""
     if [[ $Last == 0 ]]; then
-        PS1+="$Green"
+        PS1+="\[$Green\]"
     else
-        PS1+="$Red"
+        PS1+="\[$Red\]"
     fi
     PS1+="$Last "
     if [[ $EUID == 0 ]]; then
-        PS1+="$BRed"
+        PS1+="\[$BRed\]"
     else
-        PS1+="$BGreen"
+        PS1+="\[$BGreen\]"
     fi
-    PS1+="\\u$BBlack@\\h \\s $Cyan\\d \\@ \\w\\n"
+    PS1+="\\u\[$BBlack\]@\\h \\s \[$Cyan\]\\d \\@ \\w\\n"
     if [[ $EUID == 0 ]]; then
-        PS1+="$BRed"
+        PS1+="\[$BRed\]"
     else
-        PS1+="$BGreen"
+        PS1+="\[$BGreen\]"
     fi
-    PS1+="\\\$$BWhite "
+    PS1+="\\\$\[$BWhite\] "
 }
 PROMPT_COMMAND='set_prompt'
 
@@ -70,3 +70,6 @@ trap 'echo -ne "$Color_Off"' DEBUG
 if [ -f ~/play/bash/mycd.sh ]; then
     source ~/play/bash/mycd.sh
 fi
+
+# Send signal to rewrap text on window size change
+shopt -s checkwinsize

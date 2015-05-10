@@ -1,3 +1,10 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_cnt =8
 let g:netrw_dirhist_1='/home/mj/learn'
+let g:netrw_dirhist_2='/home/mj/work/upage'
+let g:netrw_dirhist_3='/home/mj/work/upage/src'
+let g:netrw_dirhist_4='/home/mj/work/upage/src/api'
+let g:netrw_dirhist_5='/home/mj/work/upage/src/api/models'
+let g:netrw_dirhist_6='/home/mj/work/upage/test'
+let g:netrw_dirhist_7='/home/mj/work/upage/test/lib'
+let g:netrw_dirhist_8='/home/mj/work/upage/src/api'
