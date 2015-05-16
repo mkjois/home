@@ -1,5 +1,5 @@
 # Pacman alias examples
-alias pacup='sudo powerpill -Syu'		# Synchronize with repositories and then upgrade packages that are out of date on the local system.
+alias pacup='sudo powerpill -Syu && dkmsup' # Synchronize with repositories and then upgrade packages that are out of date on the local system.
 alias pacin='sudo powerpill -S'			# Install specific package(s) from the repositories
 alias pacpk='sudo powerpill -U'			# Install specific package not from the repositories but from a file
 alias pacrm='sudo powerpill -Rnsc'		# Remove the specified package(s), its configuration(s) and unneeded dependencies
