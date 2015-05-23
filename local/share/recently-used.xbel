@@ -13,4 +13,64 @@
       </metadata>
     </info>
   </bookmark>
+  <bookmark href="file:///home/mj/play/misc/certificate.pdf" added="2015-05-17T01:26:46Z" modified="2015-05-17T01:26:46Z" visited="2015-05-17T01:26:46Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-05-17T01:26:46Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/Desktop/dafuq.jpg" added="2015-05-18T03:35:06Z" modified="2015-05-18T03:36:50Z" visited="2015-05-18T03:35:06Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/jpeg"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-05-18T03:36:50Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/mrp-rev-002630-003127.wav" added="2015-05-20T00:10:56Z" modified="2015-05-20T00:10:56Z" visited="2015-05-20T00:10:56Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="audio/x-wav"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-05-20T00:10:56Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/mrp-rev-002630-003127.aac" added="2015-05-20T00:10:56Z" modified="2015-05-20T00:10:56Z" visited="2015-05-20T00:10:56Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="audio/aac"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-05-20T00:10:56Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/Desktop/job_201411300834_0001_conf.xml" added="2015-05-20T22:16:33Z" modified="2015-05-20T22:16:33Z" visited="2015-05-20T22:16:33Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-05-20T22:16:33Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/Desktop/error.log-2015040107.gz" added="2015-05-20T22:18:15Z" modified="2015-05-20T22:18:15Z" visited="2015-05-20T22:18:15Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-05-20T22:18:15Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
 </xbel>
