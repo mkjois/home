@@ -15,7 +15,7 @@ alias egrep='egrep --color=auto'
 
 # extra ls aliases
 alias ll='ls -alF'
-alias la='ls -A'
+alias la='ls -AF'
 alias l='ls -CF'
 
 # Bash colors and symbols
@@ -53,7 +53,7 @@ set_prompt () {
     else
         PS1+="\[$BGreen\]"
     fi
-    PS1+="\\u\[$BBlack\]@\\h \\s \[$Cyan\]\\d \\@ \\w\\n"
+    PS1+="\\u\[$BYellow\]@\\h \\s \[$BCyan\]\\d \\@ \\w\\n"
     if [[ $EUID == 0 ]]; then
         PS1+="\[$BRed\]"
     else
@@ -64,11 +64,11 @@ set_prompt () {
 PROMPT_COMMAND='set_prompt'
 
 # Type commands in bold white, see output in regular white
-trap 'echo -ne "$Color_Off"' DEBUG
+trap 'echo -ne "$Reset"' DEBUG
 
 # Custom cd
-if [ -f ~/play/bash/mycd.sh ]; then
-    source ~/play/bash/mycd.sh
+if [ -f ~/app/bash/mycd.sh ]; then
+    source ~/app/bash/mycd.sh
 fi
 
 # Send signal to rewrap text on window size change
