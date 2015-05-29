@@ -1,9 +1,8 @@
-export ABSROOT=/build
+export ABSROOT=$HOME/pkg
 export DATADIR=$HOME/app/data
 export GREP_COLOR=`echo $Purple | cut -c 4-7`
 export LS_COLORS="di=$xBlue:ln=$xlCyan:so=$xPurple:or=$xlYellow:mi=$xRed:ex=$xlGreen:bd=$xUnd;$xUnd;$xlCyan:cd=$xUnd;$xlYellow:pi=$xUnd;$xRed"
-export RMTG=~/wrk/rmtg/src
-export RST=5
+export RMTG=$HOME/wrk/rmtg/src
 export RTOKEN=jWQTkq9XEbqmqyjMXAZ4VxpM
 export UNIVDIR=$HOME/edu
 
