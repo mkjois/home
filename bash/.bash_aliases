@@ -20,6 +20,8 @@ alias :paccleanall="sudo paccache -rk0"		# Clean cache - delete all the package 
 alias :pacindeps='sudo powerpill -S --asdeps'    # Install given package(s) as dependencies
 
 # convenience
+alias :b="x=$(pwd) && cd && source .bashrc && cd $x && unset x"
+alias :c="clear"
 alias :d="rm -f *.log *.aux .*.swp .*.swo *.pyc"
 alias :e="vim -p"
 alias :g="echo && git branch && echo && git log | head -7 && git status"
@@ -27,3 +29,4 @@ alias :h="python -m http.server 8888 2> /dev/null"
 alias :q="exit"
 alias :r='sudo $(history -p \!\!)' # single quotes are important
 alias :w="git add . && git commit -m"
+alias :rmi="docker images | grep '<none>' | tr -s ' ' | cut -f 3 -d ' ' | xargs -r docker rmi"

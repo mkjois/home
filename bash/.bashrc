@@ -33,16 +33,24 @@ if [ -f ./.bash_enviros ]; then
     . ./.bash_enviros
 fi
 
+# Display time in top right corner (currently buggy)
+#(clock &)
+
 # Hook for finding commands
 source /usr/share/doc/pkgfile/command-not-found.bash
+
+# Git prompt
+if [ -f ~/app/bash/git-prompt.sh ]; then
+    source ~/app/bash/git-prompt.sh
+fi
 
 # Prompt string
 #PS1='[\u@\h \W]\$ ' # Default
 
 set_prompt () {
-    Last=$?
-    PS1=""
-    if [[ $Last == 0 ]]; then
+    Last=$(printf "%03d" $?)
+    PS1="\[\e[s\e[1;$(($COLUMNS-18))H$BPurple\]\d \@\[\e[u\]"
+    if [[ $Last == "000" ]]; then
         PS1+="\[$Green\]"
     else
         PS1+="\[$Red\]"
@@ -53,13 +61,14 @@ set_prompt () {
     else
         PS1+="\[$BGreen\]"
     fi
-    PS1+="\\u\[$BYellow\]@\\h \\s \[$BCyan\]\\d \\@ \\w\\n"
+    Branch=$(__git_ps1 "[%s]")
+    PS1+="\u\[$Yellow\]@\h \[$BYellow\]$Branch\[$BCyan\]\w\n"
     if [[ $EUID == 0 ]]; then
         PS1+="\[$BRed\]"
     else
         PS1+="\[$BGreen\]"
     fi
-    PS1+="\\\$\[$BWhite\] "
+    PS1+="\$ \[$BWhite\]"
 }
 PROMPT_COMMAND='set_prompt'
 

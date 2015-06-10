@@ -19,6 +19,7 @@ if has('gui_running')
     set guifont=Monospace\ 10
 endif
 
+autocmd FileType Dockerfile setlocal tabstop=4 shiftwidth=4
 autocmd FileType python setlocal tabstop=4 shiftwidth=4
 autocmd FileType sh setlocal tabstop=4 shiftwidth=4
 autocmd FileType vim setlocal tabstop=4 shiftwidth=4
