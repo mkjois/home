@@ -3,16 +3,6 @@
       xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks"
       xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info"
 >
-  <bookmark href="file:///home/mj/docs/misc/chrome-bookmarks.html" added="2015-05-07T03:09:51Z" modified="2015-05-07T03:09:51Z" visited="2015-05-07T03:09:51Z">
-    <info>
-      <metadata owner="http://freedesktop.org">
-        <mime:mime-type type="text/html"/>
-        <bookmark:applications>
-          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-05-07T03:09:51Z" count="1"/>
-        </bookmark:applications>
-      </metadata>
-    </info>
-  </bookmark>
   <bookmark href="file:///home/mj/play/misc/certificate.pdf" added="2015-05-17T01:26:46Z" modified="2015-05-17T01:26:46Z" visited="2015-05-17T01:26:46Z">
     <info>
       <metadata owner="http://freedesktop.org">
