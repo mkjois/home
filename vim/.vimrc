@@ -4,7 +4,7 @@ set expandtab
 set smartindent
 
 set number
-set columns=80
+set columns=85
 set numberwidth=5
 
 set comments=sl:/**,mb:\ *,elx:\ */
