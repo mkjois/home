@@ -2,6 +2,7 @@ export ABSROOT=$HOME/pkg
 export DATADIR=$HOME/app/data
 export DOCKER=$HOME/var/lib/docker
 export EMAIL="m.k.jois@gmail.com"
+export GOPATH=$HOME/wrk/rmtg/src/go
 export GREP_COLOR=`echo $Purple | cut -c 4-7`
 export LS_COLORS="di=$xBlue:ln=$xlCyan:so=$xPurple:or=$xlYellow:mi=$xRed:ex=$xlGreen:bd=$xUnd;$xlCyan:cd=$xUnd;$xlYellow:pi=$xUnd;$xRed"
 export NAME="Manny Jois"

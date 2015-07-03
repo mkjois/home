@@ -206,4 +206,76 @@
       <output name="HDMI-0">
       </output>
   </configuration>
+  <configuration>
+      <clone>no</clone>
+      <output name="eDP-0">
+          <vendor>SHP</vendor>
+          <product>0x1420</product>
+          <serial>0x00000000</serial>
+      </output>
+      <output name="DisplayPort-0">
+          <vendor>ACI</vendor>
+          <product>0x27a3</product>
+          <serial>0x00014daf</serial>
+          <width>2560</width>
+          <height>1440</height>
+          <rate>60</rate>
+          <x>0</x>
+          <y>0</y>
+          <rotation>normal</rotation>
+          <reflect_x>no</reflect_x>
+          <reflect_y>no</reflect_y>
+          <primary>yes</primary>
+      </output>
+      <output name="HDMI-0">
+      </output>
+  </configuration>
+  <configuration>
+      <clone>no</clone>
+      <output name="eDP-0">
+          <vendor>SHP</vendor>
+          <product>0x1420</product>
+          <serial>0x00000000</serial>
+      </output>
+      <output name="DisplayPort-0">
+      </output>
+      <output name="HDMI-0">
+          <vendor>ACI</vendor>
+          <product>0x27a3</product>
+          <serial>0x00014daf</serial>
+          <width>2560</width>
+          <height>1440</height>
+          <rate>60</rate>
+          <x>0</x>
+          <y>0</y>
+          <rotation>normal</rotation>
+          <reflect_x>no</reflect_x>
+          <reflect_y>no</reflect_y>
+          <primary>yes</primary>
+      </output>
+  </configuration>
+  <configuration>
+      <clone>no</clone>
+      <output name="eDP-0">
+          <vendor>SHP</vendor>
+          <product>0x1420</product>
+          <serial>0x00000000</serial>
+      </output>
+      <output name="DisplayPort-0">
+      </output>
+      <output name="HDMI-0">
+          <vendor>ACI</vendor>
+          <product>0x27a3</product>
+          <serial>0x00014dac</serial>
+          <width>2560</width>
+          <height>1440</height>
+          <rate>24</rate>
+          <x>0</x>
+          <y>0</y>
+          <rotation>normal</rotation>
+          <reflect_x>no</reflect_x>
+          <reflect_y>no</reflect_y>
+          <primary>yes</primary>
+      </output>
+  </configuration>
 </monitors>
