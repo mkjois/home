@@ -105,4 +105,45 @@
       </metadata>
     </info>
   </bookmark>
+  <bookmark href="file:///home/mj/Downloads/flat_remeeting-01.png" added="2015-07-06T23:43:29Z" modified="2015-07-06T23:43:29Z" visited="2015-07-06T23:43:29Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="gpicview" exec="&apos;gpicview %u&apos;" modified="2015-07-06T23:43:29Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/wrk/rmtg/src/go/src/github.com/mkjois/gofex/samples/jumble.wav" added="2015-07-07T19:11:09Z" modified="2015-07-07T19:11:16Z" visited="2015-07-07T19:11:10Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="audio/x-wav"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-07-07T19:11:16Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/wrk/rmtg/src/go/src/github.com/mkjois/gofex/scripts/plota.py" added="2015-07-07T23:38:11Z" modified="2015-07-07T23:38:11Z" visited="2015-07-07T23:38:11Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-python"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-07-07T23:38:11Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/wrk/rmtg/src/go/src/github.com/mkjois/gofex/figure_1.png" added="2015-07-08T23:12:36Z" modified="2015-07-08T23:13:51Z" visited="2015-07-08T23:12:37Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="plot.py" exec="&apos;plot.py %u&apos;" modified="2015-07-08T23:13:40Z" count="2"/>
+          <bookmark:application name="gpicview" exec="&apos;gpicview %u&apos;" modified="2015-07-08T23:13:51Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
 </xbel>
