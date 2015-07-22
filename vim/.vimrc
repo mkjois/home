@@ -6,13 +6,16 @@ set smartindent
 
 " Seeing line numbers is cool, but adhering to the 80 char rule is challenging!
 set number
-set columns=85
 set numberwidth=5
 
 " Javadoc style comments. Still looking to better my (un)commenting efficiency.
 set comments=sl:/**,mb:\ *,elx:\ */
 set formatoptions+=r
 set formatoptions+=o
+
+" Splits
+set splitright
+set splitbelow
 
 " nuke the shit outta the arrow keys and others.
 map <Up> <Nop>
@@ -24,10 +27,10 @@ map <Delete> <Nop>
 map <Backspace> <Nop>
 map <Return> <Nop>
 map <Space> <Nop>
-map! <Up> <Nop>
-map! <Down> <Nop>
-map! <Left> <Nop>
-map! <Right> <Nop>
+imap <Up> <Nop>
+imap <Down> <Nop>
+imap <Left> <Nop>
+imap <Right> <Nop>
 map! <Insert> <Nop>
 
 " Maps I think are useful or rational.

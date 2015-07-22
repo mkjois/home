@@ -3,36 +3,6 @@
       xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks"
       xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info"
 >
-  <bookmark href="file:///home/mj/Downloads/order_history.pdf" added="2015-06-16T18:56:56Z" modified="2015-06-16T18:57:33Z" visited="2015-06-16T18:56:56Z">
-    <info>
-      <metadata owner="http://freedesktop.org">
-        <mime:mime-type type="application/pdf"/>
-        <bookmark:applications>
-          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-06-16T18:57:33Z" count="3"/>
-        </bookmark:applications>
-      </metadata>
-    </info>
-  </bookmark>
-  <bookmark href="file:///home/mj/Downloads/order_history.4.pdf" added="2015-06-16T18:59:01Z" modified="2015-06-16T18:59:01Z" visited="2015-06-16T18:59:01Z">
-    <info>
-      <metadata owner="http://freedesktop.org">
-        <mime:mime-type type="application/pdf"/>
-        <bookmark:applications>
-          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-06-16T18:59:01Z" count="1"/>
-        </bookmark:applications>
-      </metadata>
-    </info>
-  </bookmark>
-  <bookmark href="file:///home/mj/Downloads/order_history.1.pdf" added="2015-06-16T18:59:40Z" modified="2015-06-16T18:59:40Z" visited="2015-06-16T18:59:40Z">
-    <info>
-      <metadata owner="http://freedesktop.org">
-        <mime:mime-type type="application/pdf"/>
-        <bookmark:applications>
-          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-06-16T18:59:40Z" count="1"/>
-        </bookmark:applications>
-      </metadata>
-    </info>
-  </bookmark>
   <bookmark href="file:///home/mj/wrk/rmtg/src/go/sample.wav" added="2015-06-22T23:21:41Z" modified="2015-06-22T23:21:41Z" visited="2015-06-22T23:21:41Z">
     <info>
       <metadata owner="http://freedesktop.org">
@@ -142,6 +112,106 @@
         <bookmark:applications>
           <bookmark:application name="plot.py" exec="&apos;plot.py %u&apos;" modified="2015-07-08T23:13:40Z" count="2"/>
           <bookmark:application name="gpicview" exec="&apos;gpicview %u&apos;" modified="2015-07-08T23:13:51Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/wrk/rmtg/src/go/src/github.com/mkjois/gofex/mono.mfcc" added="2015-07-09T23:47:47Z" modified="2015-07-09T23:47:47Z" visited="2015-07-09T23:47:47Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-07-09T23:47:47Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/wrk/rmtg/src/go/src/github.com/mkjois/gofex/sine2k.mfcc" added="2015-07-09T23:47:47Z" modified="2015-07-09T23:47:47Z" visited="2015-07-09T23:47:47Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-07-09T23:47:47Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/Downloads/cfex.tar" added="2015-07-10T01:37:26Z" modified="2015-07-10T01:37:26Z" visited="2015-07-10T01:37:27Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-tar"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-07-10T01:37:26Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/edu/misc/ship_waiver_15_16.pdf" added="2015-07-13T01:59:07Z" modified="2015-07-13T01:59:59Z" visited="2015-07-13T01:59:08Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/pdf"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-07-13T01:59:59Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/mono.mfcc.txt" added="2015-07-14T21:20:07Z" modified="2015-07-14T21:20:07Z" visited="2015-07-14T21:20:07Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/plain"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-07-14T21:20:07Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/wrk/rmtg/src/go/src/github.com/mkjois/gofex/images/mono.mfcc.htk.txt.200.png" added="2015-07-14T22:26:09Z" modified="2015-07-15T00:01:08Z" visited="2015-07-14T22:26:09Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="gpicview" exec="&apos;gpicview %u&apos;" modified="2015-07-15T00:01:08Z" count="4"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/wrk/rmtg/src/go/src/github.com/mkjois/gofex/images/mono.mfcc.jstk.txt.200.png" added="2015-07-14T22:26:21Z" modified="2015-07-14T23:16:22Z" visited="2015-07-14T22:26:22Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="gpicview" exec="&apos;gpicview %u&apos;" modified="2015-07-14T23:16:22Z" count="4"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/wrk/rmtg/src/go/src/github.com/mkjois/gofex/images/mono.mfcc.txt.200.png" added="2015-07-14T22:26:26Z" modified="2015-07-15T00:00:58Z" visited="2015-07-14T22:26:26Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="gpicview" exec="&apos;gpicview %u&apos;" modified="2015-07-15T00:00:58Z" count="7"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/wrk/rmtg/src/go/src/bitbucket.org/remeeting/mrp-dsp/mono.bin.tmp" added="2015-07-16T02:19:42Z" modified="2015-07-16T02:19:42Z" visited="2015-07-16T02:19:42Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-07-16T02:19:42Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/mj/edu/cs170/algorithms.pdf" added="2015-07-18T00:08:21Z" modified="2015-07-18T00:08:21Z" visited="2015-07-18T00:08:21Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="google-chrome-stable" exec="&apos;google-chrome-stable %u&apos;" modified="2015-07-18T00:08:21Z" count="1"/>
         </bookmark:applications>
       </metadata>
     </info>
