@@ -7,6 +7,7 @@ set smartindent
 " Seeing line numbers is cool, but adhering to the 80 char rule is challenging!
 set number
 set numberwidth=5
+set nowrap
 
 " Javadoc style comments. Still looking to better my (un)commenting efficiency.
 set comments=sl:/**,mb:\ *,elx:\ */
@@ -52,6 +53,7 @@ nmap gl m`wb~``
 nmap gL m`viw~``
 noremap ' `
 noremap ` '
+noremap! <S-CR> <Esc>
 
 " Make the arrow keys bubble lines/words in normal and insert modes.
 "nmap <UP> ddkP
@@ -74,7 +76,10 @@ endif
 
 " Some files are best with 4 spaces per indent.
 autocmd FileType Dockerfile setlocal tabstop=4 shiftwidth=4
-autocmd FileType go setlocal tabstop=4 shiftwidth=4
+autocmd FileType go setlocal tabstop=4 shiftwidth=4 noexpandtab
 autocmd FileType python setlocal tabstop=4 shiftwidth=4
 autocmd FileType sh setlocal tabstop=4 shiftwidth=4
 autocmd FileType vim setlocal tabstop=4 shiftwidth=4
+
+" Make goimports the gofmt command
+let g:go_fmt_command = "goimports"

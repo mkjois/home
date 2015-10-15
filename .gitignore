@@ -5,6 +5,7 @@ esd
 gnupg
 pki
 ssh
+vagrant.d
 x11
 
 # Linux swap files #

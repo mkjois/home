@@ -1,10 +1,4 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =8
-let g:netrw_dirhist_1='/home/mj/Downloads/arlofaria-phd-10dc9a13227d'
-let g:netrw_dirhist_2='/home/mj/Downloads/arlofaria-phd-10dc9a13227d/fex'
-let g:netrw_dirhist_3='/home/mj/Downloads/arlofaria-phd-10dc9a13227d/fex/vendors'
-let g:netrw_dirhist_4='/home/mj/Downloads/arlofaria-phd-10dc9a13227d/fex'
-let g:netrw_dirhist_5='/home/mj/Downloads/arlofaria-phd-10dc9a13227d/fex/test'
-let g:netrw_dirhist_6='/home/mj/wrk/rmtg/src/go/src/github.com/mkjois/gofex/feat'
-let g:netrw_dirhist_7='/home/mj/wrk/rmtg/src/go/src/bitbucket.org/remeeting/mrp-dsp'
-let g:netrw_dirhist_8='/home/mj/wrk/rmtg/src/go/src/bitbucket.org/remeeting/mrp-dsp/feat'
+let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_1='/home/mj/Downloads/proj_routing/simulator'
+let g:netrw_dirhist_2='/home/mj/Downloads/proj_routing/simulator/sim'

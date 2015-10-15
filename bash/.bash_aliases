@@ -20,31 +20,23 @@ alias :paccleanall="sudo paccache -rk0"		# Clean cache - delete all the package 
 alias :pacindeps='sudo powerpill -S --asdeps'    # Install given package(s) as dependencies
 
 # convenience
-alias :b="x=$(pwd) && cd && source .bashrc && cd $x && unset x"
 alias :c="clear"
-alias :da="docker attach"
-alias :db="docker build"
 alias :di="docker images"
 alias :dp="docker ps -a"
-alias :dpl="docker pull"
-alias :dps="docker push"
-alias :drm="docker rm -f"
-alias :drmi="docker rmi"
 alias :drmin="docker images | grep '<none>' | tr -s ' ' | cut -f 3 -d ' ' | xargs -r docker rmi"
-alias :dru="docker run"
 alias :e="vim -p"
-alias :g="git log | head -6 && git branch && echo && git status -sb"
-alias :ga="git add"
-alias :gb="git branch"
-alias :gch="git checkout"
-alias :gco="git commit -m"
-alias :gf="git fetch"
-alias :gl="git log"
-alias :gpl="git pull"
-alias :gps="git push"
-alias :gs="git status"
+alias :g="echo -e '\nBRANCHES' && git branch && echo -e '\nLATEST' && git log -n 1 && echo -e '\nSTATUS' && git status -sb && echo"
 alias :h="python -m SimpleHTTPServer 8888 2> /dev/null"
 alias :q="exit"
-alias :r="rm -f .*.swp .*.swo *.pyc *.pyd"
-alias :s='sudo $(history -p \!\!)' # single quotes are important
+alias :r="rm -f *.swp *.swo .*.swp .*.swo *.pyc *.pyd"
+alias :s='sudo $(history -p \!\!)'  # single quotes are important
 alias :w="git add . && git commit -m"
+alias gbg='go install --gccgoflags "-L$GOPATH/src/bitbucket.org/remeeting/mrp-go/lib/ -lopenblas -lm" --ldflags --extldflags=--static bitbucket.org/remeeting/mrp-go/gogmm'  # single quotes
+alias gbf='go install --ldflags --extldflags=--static bitbucket.org/remeeting/mrp-go/gofex'
+
+# cd's
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
