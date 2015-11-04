@@ -31,8 +31,9 @@ alias :q="exit"
 alias :r="rm -f *.swp *.swo .*.swp .*.swo *.pyc *.pyd"
 alias :s='sudo $(history -p \!\!)'  # single quotes are important
 alias :w="git add . && git commit -m"
-alias gbg='go install --gccgoflags "-L$GOPATH/src/bitbucket.org/remeeting/mrp-go/lib/ -lopenblas -lm" --ldflags --extldflags=--static bitbucket.org/remeeting/mrp-go/gogmm'  # single quotes
+alias gbc='go install bitbucket.org/remeeting/mrp-go/goconv' # single quotes
 alias gbf='go install --ldflags --extldflags=--static bitbucket.org/remeeting/mrp-go/gofex'
+alias gbg='go install --gccgoflags "-L$GOPATH/src/bitbucket.org/remeeting/mrp-go/lib/ -lopenblas -lm" --ldflags --extldflags=--static bitbucket.org/remeeting/mrp-go/gogmm'
 
 # cd's
 alias ..="cd .."
