@@ -1,16 +1,20 @@
-info t=2015-11-03T00:25:07.627Z loading default theme
-info t=2015-11-03T00:25:07.720Z loaded at Mon Nov 02 2015 16:25:07 GMT-0800 (PST)
-info t=2015-11-03T00:25:07.927Z Loaded applet menu@cinnamon.org in 203 ms
-info t=2015-11-03T00:25:07.938Z Role locked: windowlist
-info t=2015-11-03T00:25:07.939Z Loaded applet window-list@cinnamon.org in 9 ms
-info t=2015-11-03T00:25:07.960Z Loaded applet calendar@cinnamon.org in 20 ms
-info t=2015-11-03T00:25:07.971Z Role locked: notifications
-info t=2015-11-03T00:25:07.975Z Loaded applet notifications@cinnamon.org in 13 ms
-info t=2015-11-03T00:25:07.983Z Loaded applet removable-drives@cinnamon.org in 7 ms
-info t=2015-11-03T00:25:07.999Z Loaded applet power@cinnamon.org in 15 ms
-info t=2015-11-03T00:25:08.081Z Loaded applet network@cinnamon.org in 80 ms
-info t=2015-11-03T00:25:08.090Z Loaded applet systray@cinnamon.org in 7 ms
-info t=2015-11-03T00:25:08.098Z Loaded applet workspace-switcher@cinnamon.org in 7 ms
-info t=2015-11-03T00:25:08.105Z Loaded applet windows-quick-list@cinnamon.org in 6 ms
-info t=2015-11-03T00:25:15.161Z Adding systray: google-chrome-stable (20x20px)
-info t=2015-11-03T00:25:15.161Z    Resized google-chrome-stable (23.200000762939453x23.200000762939453px)
+info t=2016-02-01T22:11:35.597Z Cinnamon.AppSystem.get_default() started in 103 ms
+info t=2016-02-01T22:11:35.602Z loading default theme
+info t=2016-02-01T22:11:35.789Z PlacesManager: Updating devices
+info t=2016-02-01T22:11:35.814Z loaded at Mon Feb 01 2016 14:11:35 GMT-0800 (PST)
+info t=2016-02-01T22:11:36.129Z Loaded applet menu@cinnamon.org in 313 ms
+info t=2016-02-01T22:11:36.144Z Loaded applet window-list@cinnamon.org in 14 ms
+info t=2016-02-01T22:11:36.166Z Loaded applet calendar@cinnamon.org in 21 ms
+info t=2016-02-01T22:11:36.175Z Loaded applet removable-drives@cinnamon.org in 8 ms
+info t=2016-02-01T22:11:36.193Z Loaded applet power@cinnamon.org in 17 ms
+info t=2016-02-01T22:11:36.243Z Loaded applet network@cinnamon.org in 49 ms
+info t=2016-02-01T22:11:36.252Z Loaded applet systray@cinnamon.org in 8 ms
+info t=2016-02-01T22:11:36.268Z Loaded applet workspace-switcher@cinnamon.org in 14 ms
+info t=2016-02-01T22:11:36.268Z AppletManager.init() started in 453 ms
+info t=2016-02-01T22:11:36.270Z Cinnamon took 797 ms to start
+info t=2016-02-01T22:11:36.605Z Hiding systray: network
+info t=2016-02-02T11:10:57.930Z GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.cinnamon.SettingsDaemon was not provided by any .service files
+trace t=2016-02-02T11:10:57.930Z 
+<----------------
+_proxyInvoker/asyncCallback@resource:///org/gnome/gjs/modules/overrides/Gio.js:83
+---------------->

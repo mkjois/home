@@ -3,6 +3,7 @@ aws
 docker
 esd
 gnupg
+npm
 pki
 ssh
 vagrant.d

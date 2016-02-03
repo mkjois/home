@@ -47,7 +47,7 @@
         "default": false,
         "description": "Enable filesystem path entry in search box",
         "tooltip": "Allows path entry in the menu search box.",
-        "value": true
+        "value": false
     },
     "activate-on-hover": {
         "type": "checkbox",
