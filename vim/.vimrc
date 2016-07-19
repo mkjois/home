@@ -2,7 +2,7 @@
 set tabstop=2
 set shiftwidth=2
 set expandtab
-set smartindent
+set autoindent
 
 " Seeing line numbers is cool, but adhering to the 80 char rule is challenging!
 set number
@@ -51,9 +51,13 @@ noremap <Space> :w<Return>
 nnoremap K gkJ
 nnoremap X 0D
 nnoremap Y y$
+nnoremap V v$
 noremap ' `
 noremap ` '
-noremap! <S-CR> <Esc>
+inoremap jk <Esc>
+inoremap <Esc> <Nop>
+vnoremap jk <Esc>
+vnoremap <Esc> <Nop>
 
 " Make the arrow keys bubble lines/words in normal and insert modes.
 "nmap <UP> ddkP
@@ -73,6 +77,18 @@ if has('gui_running')
     colorscheme solarized
     set guifont=Monospace\ 10
 endif
+
+" Command to open extra tabs while already in Vim
+function! TT(...)
+    for i in a:000
+        echo i
+    endfor
+    argadd expand(a:000)
+endfunction
+
+" Set shell script syntax for files with no extension (except Dockerfiles)
+autocmd BufNewFile,BufRead * if expand('%:t') =~ '^[^\.]\+$' | set ft=sh | endif
+autocmd BufNewFile,BufRead * if expand('%:t') =~ '^Dockerfile' | set ft=Dockerfile | endif
 
 " Some files are best with 4 spaces per indent.
 autocmd FileType Dockerfile setlocal tabstop=4 shiftwidth=4
