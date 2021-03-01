@@ -54,9 +54,9 @@ nnoremap Y y$
 nnoremap V v$
 noremap ' `
 noremap ` '
-inoremap jk <Esc>
+inoremap df <Esc>
 inoremap <Esc> <Nop>
-vnoremap jk <Esc>
+vnoremap df <Esc>
 vnoremap <Esc> <Nop>
 
 " Make the arrow keys bubble lines/words in normal and insert modes.
