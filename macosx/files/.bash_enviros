@@ -1,0 +1,25 @@
+export NAME="Manny Jois"
+export EMAIL="mjois@quantcast.com"
+export CLICOLOR=1
+
+export JAVA_HOME="$(/usr/libexec/java_home -v 14)"
+export GOPATH="${HOME}/src/go"
+
+# PATH additions, in order of increasing precedence
+
+export PATH="${PATH/\/usr\/sbin//usr/local/sbin:/usr/sbin}"
+
+path="${HOME}/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi
+
+path="${GOPATH}/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi
+
+path="${HOME}/.cargo/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi

@@ -1,0 +1,8 @@
+""""""""""""""""""
+" IntelliJ vimrc "
+""""""""""""""""""
+
+source ~/.basevimrc
+
+" vim-surround plugin
+set surround

@@ -1,0 +1,36 @@
+# TODO: separate out sensitive stuff
+.bash_aliases
+.ssh/config
+
+# IntelliJ
+.idea
+**.iml
+**.ipr
+**.iws
+
+# Temporary-file naming conventions
+**.asdf
+**.local
+**.tmp
+asdf.**
+local.**
+tmp.**
+asdf
+local
+tmp
+
+# Python caches and Vim swap files
+**.py[a-z]
+**.sw[a-z]
+
+# Mac OSX
+.DS_Store
+
+# Binaries and working repos
+bin
+opt
+
+# Ant runtime errors
+core
+hs_err_*.log
+junit*.properties
