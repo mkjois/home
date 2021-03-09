@@ -5,7 +5,7 @@
 [push]
 	default = simple
 [core]
-	excludesfile = /Users/mjois/.gitignore
+	excludesfile = ~/.gitignore
 	commentChar = ";"
 [alias]
 	brd = branch -D
@@ -16,7 +16,7 @@
 	trash = !git remote prune origin && git prune -v && git gc --aggressive
 	trunk = clone --depth 3 --no-single-branch
 [commit]
-	template = /Users/mjois/.gitmessage
+	template = ~/.gitmessage
 	gpgsign = true
 [grep]
 	patternType = extended
