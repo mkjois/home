@@ -1,7 +1,7 @@
 [user]
 	name = Manny Jois
 	email = mjois@quantcast.com
-	signingkey = 8EA70A6B277A1809
+	signingkey = 7C140E33FE7E45F0
 [push]
 	default = simple
 [core]
@@ -21,3 +21,5 @@
 [grep]
 	patternType = extended
 	lineNumber = true
+[pull]
+	ff = only

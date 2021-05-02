@@ -10,19 +10,28 @@ test -f ~/.bash_aliases && source ~/.bash_aliases
 test -e ~/.iterm2_shell_integration.bash && source ~/.iterm2_shell_integration.bash
 
 # Git prompt
-test -f ~/lib/git-prompt.sh && source ~/lib/git-prompt.sh
+if test -f ~/lib/git-prompt.sh; then
+    source ~/lib/git-prompt.sh
+elif test -f /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh; then
+    source /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh
+fi
 
-# Homebrew autocompletion extensions
+# Autocompletion
 if type brew > /dev/null 2>&1; then
-    test -f $(brew --prefix)/share/bash-completion/bash_completion \
-        && source $(brew --prefix)/share/bash-completion/bash_completion
+
     test -f $(brew --prefix)/etc/bash_completion \
         && source $(brew --prefix)/etc/bash_completion
     test -d $(brew --prefix)/etc/bash_completion.d \
         && source $(brew --prefix)/etc/bash_completion.d/*
+
+    if test -f ~/lib/git-completion.bash; then
+        source ~/lib/git-completion.bash
+    elif test -f /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash; then
+        source /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash
+    fi
 fi
 
-# AWS CLI auto-completion
+# AWS CLI autocompletion
 which aws_completer > /dev/null 2>&1 && complete -C "$(which aws_completer)" aws
 
 set_prompt () {
