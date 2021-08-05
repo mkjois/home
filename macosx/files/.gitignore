@@ -23,7 +23,7 @@ tmp
 **.py[a-z]
 **.sw[a-z]
 
-# Mac OSX
+# Mac OS
 .DS_Store
 
 # Binaries and working repos

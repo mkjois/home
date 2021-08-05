@@ -4,5 +4,7 @@
 
 source ~/.basevimrc
 
+set ideajoin
+
 " vim-surround plugin
 set surround
