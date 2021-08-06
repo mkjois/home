@@ -1,20 +1,20 @@
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
+test -e ~/.basebashrc && source ~/.basebashrc
 
-# Bash colors/symbols, aliases, env vars
-test -f ~/.bash_fonts   && source ~/.bash_fonts
-test -f ~/.bash_enviros && source ~/.bash_enviros
-test -f ~/.bash_aliases && source ~/.bash_aliases
+export JAVA_HOME="$(/usr/libexec/java_home -v 14)"
+export GOPATH="${HOME}/src/go"
+
+path="${GOPATH}/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi
+
+path="${HOME}/.cargo/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi
 
 # iTerm2 integrations
 test -e ~/.iterm2_shell_integration.bash && source ~/.iterm2_shell_integration.bash
-
-# Git prompt
-if test -f ~/lib/git-prompt.sh; then
-    source ~/lib/git-prompt.sh
-elif test -f /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh; then
-    source /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh
-fi
 
 # Autocompletion
 if type brew > /dev/null 2>&1; then
@@ -31,34 +31,150 @@ if type brew > /dev/null 2>&1; then
     fi
 fi
 
-# AWS CLI autocompletion
-which aws_completer > /dev/null 2>&1 && complete -C "$(which aws_completer)" aws
+# export functions for use in scripts
+set -a
 
-set_prompt () {
-    Last=$(printf "%03d" $?)
-    PS1=""
-    [[ $Last == "000" ]] && PS1+="\[$DGreen\]" || PS1+="\[$DRed\]"
-    PS1+="$Last "
-    [[ $EUID == 0 ]] && PS1+="\[$BRed\]" || PS1+="\[$BGreen\]"
-    Branch=$(__git_ps1 "[%s]")
-    PS1+="\u\[$DYellow\]@qc \[$BPurple\]$Branch\[$BBlue\]\w\n"
-    [[ $EUID == 0 ]] && PS1+="\[$BRed\]" || PS1+="\[$BGreen\]"
-    PS1+="\$ \[$BBlack\]"
-    [[ $EUID == 0 ]] && PS2="\[$BRed\]> \[$BBlack\]" || PS2="\[$BGreen\]> \[$BBlack\]"
-    [[ $EUID == 0 ]] && PS4="\[$BRed\]+ \[$BBlack\]" || PS4="\[$BGreen\]+ \[$BBlack\]"
+ant() {
+    jdkversion="${JDK_VERSION:-8u212}"
+    antversion="${ANT_VERSION:-1.9.14}"
+    docker run --rm -it \
+        -v ${HOME}/.ivy2:/root/.ivy2 \
+        -v ${HOME}/.m2:/root/.m2 \
+        -v "$(pwd):/src" \
+        -w /src \
+        --ulimit core=-1 \
+        docker-registry.infra.quantcast.com:5000/jdk-${jdkversion}-ant-${antversion} ant "$@"
 }
-PROMPT_COMMAND='set_prompt'
 
-# Reset color after command is entered
-trap 'echo -ne $Reset' DEBUG
+aws() {
+    docker run --rm -i \
+        -v ${HOME}/.aws:/root/.aws:ro \
+        -v ${HOME}/.kube:/root/.kube \
+        -v "$(pwd):/aws" \
+        amazon/aws-cli "$@"
+}
 
-# Send signal to rewrap text on window size change
-shopt -s checkwinsize
+cg() {
+    repo="${1:-NONE}"
+    matching_dirs="$(find "${GOPATH}/src" -type d -maxdepth 4 -name '\.git' | grep -E "/${repo}[^/]*/\.git\$")"
+    if echo -e "${matching_dirs}" | grep -qE '^$'; then
+        echo -e "\nNo repos found: ${repo}*\n" >&2
+        return 1
+    elif test "$(echo -e "${matching_dirs}" | wc -l | awk '{print $1}')" -eq 1; then
+        cd "$(dirname "${matching_dirs}")"
+    else
+        prefix_to_remove="$(echo "${GOPATH}/src/" | sed 's/\//\\\//g')"
+        echo -e "\nAmbiguous:\n$(echo -e "${matching_dirs}" | sed 's/\/\.git$//' | sed "s/^${prefix_to_remove}/ - /")\n" >&2
+        return 1
+    fi
+}
 
-# Command history
-shopt -s cmdhist
-shopt -s histappend
-export HISTFILESIZE=100000
-export HISTSIZE=100000
-export HISTCONTROL=ignoreboth
-export HISTIGNORE='d:g:l:la:ll:lr:ls:bg:fg:jobs:clear:reset:exit:history'
+#git() {
+#    docker run --rm -it \
+#        -v ${HOME}/.ssh:/root/.ssh \
+#        -v ${HOME}/.gitconfig:/root/.gitconfig \
+#        -v ${HOME}/.gitignore:/root/.gitignore:ro \
+#        -v ${HOME}/.gitmessage:/root/.gitmessage:ro \
+#        -v "$(pwd):/git" \
+#        alpine/git "$@"
+#}
+
+gitbook() {
+    docker run --rm -it \
+        -v "$(pwd):/src" \
+        -w /src \
+        -p 4000:4000 \
+        qc/gitbook gitbook "$@"
+}
+
+jq() {
+    docker run --rm -i \
+        -v "$(pwd):/src" \
+        -w /src \
+        imega/jq "$@"
+}
+
+jv() {
+    version="${1:-11}"
+    export JAVA_HOME="$(/usr/libexec/java_home -v "$(test "${version}" -lt 9 && echo "1.${version}" || echo "${version}")")"
+}
+
+newpr() {
+    if test "$1"; then
+        open "https://github.corp.qc/$(git remote get-url origin | cut -d ':' -f 2 | cut -d '.' -f 1)/compare/$1...$(git branch | grep \* | cut -d ' ' -f 2)"
+    else
+        open "https://github.corp.qc/$(git remote get-url origin | cut -d ':' -f 2 | cut -d '.' -f 1)/compare/$(git branch | grep \* | cut -d ' ' -f 2)"
+    fi
+}
+
+nsb() {
+    name="${1:-asdf.sh}"
+    cp ~/lib/script-template-bash.sh "${name}"
+    chmod +x "${name}"
+}
+
+nsp() {
+    name="${1:-asdf.py}"
+    cp ~/lib/script-template-python.py "${name}"
+    chmod +x "${name}"
+}
+
+packer() {
+    pkversion="${PK_VERSION:-1.7.3}"
+    docker run --rm -it \
+        -v ${HOME}/.aws:/root/.aws:ro \
+        -v "$(pwd):/src" \
+        -w /src \
+        hashicorp/packer:${pkversion} "$@"
+}
+
+pssh() {
+    docker run --rm -i \
+        -v ~/.ssh:/root/.ssh:ro \
+        -v "$(pwd):/src" \
+        -w /src \
+        reactivehub/pssh parallel-ssh -l ${USER} "$@"
+}
+
+terraform() {
+    tfversion="${TF_VERSION:-1.0.1}"
+    docker run --rm -i \
+        -v ${HOME}/.aws:/root/.aws:ro \
+        -v ${HOME}/.ssh:/root/.ssh:ro \
+        -v ${HOME}/.terraform.d:/root/.terraform.d \
+        -v "$(pwd):/src" \
+        -w /src \
+        hashicorp/terraform:${tfversion} "$@"
+}
+
+vault() {
+    vtversion="${VT_VERSION:-1.7.3}"
+    docker run --rm -it \
+        --entrypoint '' \
+        -e USER=${USER} \
+        -e VAULT_ADDR=https://vault.int.quantcast.com:8200 \
+        -v "$(pwd):/src" \
+        -w /src \
+        vault:${vtversion} ash
+}
+
+yarn() {
+    nodeversion="${NODE_VERSION:-14}"
+    docker run --rm -it \
+        -v ${HOME}/.ssh:/root/.ssh:ro \
+        -v "$(pwd):/src" \
+        -w /src \
+        -p 3000:3000 \
+        node:${nodeversion}-alpine yarn "$@"
+}
+
+# stop exporting stuff
+set +a
+
+alias alpp='docker run --rm -it -v ${HOME}/.aws:/root/.aws docker-registry.infra.quantcast.com:5000/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform     --role rtb-platform'
+alias alpd='docker run --rm -it -v ${HOME}/.aws:/root/.aws docker-registry.infra.quantcast.com:5000/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform-dev --role rtb-platform-dev'
+alias cti='ant clean test integ-test'
+alias djj='ant deploy-job.jar -Ddeploy.host=launch0'
+alias fp='~/src/foss/brendangregg/FlameGraph/stackcollapse-perf.pl | ~/src/foss/brendangregg/FlameGraph/flamegraph.pl'
+alias gp='gpg --sign -u "${EMAIL}" -o /dev/null ~/.gitmessage'
+alias upcask="brew upgrade --cask \$(brew list --cask -1 --full-name | sort | tr '\n' ' ')"
