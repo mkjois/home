@@ -92,11 +92,17 @@ fetch() {
     git branch --set-upstream-to "origin/${branch}"
 }
 
+ggb() {
+    arg="$1"
+    shift
+    git grep "\b${arg}\b" "$@"
+}
+
 gitup() {
     branch="${1:-master}"
-    git checkout "${branch}"
-    git pull
-    git branch -D "$(git rev-parse --abbrev-ref @{-1})"
+    git c "${branch}"
+    git p
+    git bd "$(git rev-parse --abbrev-ref @{-1})"
 }
 
 psql() {
@@ -119,13 +125,14 @@ total() {
 set +a
 
 alias g="echo -e '\n===== BRANCHES =====\n' && git branch && echo -e '\n===== LATEST =====\n' && git --no-pager log -n 2 && echo -e '\n===== STATUS =====\n' && git status -sb && echo"
+alias rgl="rm -rfv ~/.go"
 alias rml="rm -rfv ~/.m2"
 
 # Docker convenience
-alias d="echo -e '\n===== CONTAINERS =====\n' && docker ps -a && echo -e '\n===== IMAGES =====\n' && docker images | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | sort -k 1 && echo"
+alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:5000\\/' | LC_COLLATE=C sort -k 1 && echo"
 alias dr='docker run --rm -it -w /src -v "$(pwd):/src"'
 alias dcat='docker run --rm -i -w /src -v "$(pwd):/src"'
-alias docktor="docker system prune --volumes"
+alias dgc="docker system prune --volumes"
 
 # Vim convenience
 alias v='vim -p'

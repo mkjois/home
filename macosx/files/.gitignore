@@ -8,6 +8,9 @@
 **.ipr
 **.iws
 
+# VS Code
+.vscode
+
 # Temporary-file naming conventions
 **.asdf
 **.local

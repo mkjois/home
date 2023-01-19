@@ -69,6 +69,19 @@ cg() {
     fi
 }
 
+dive() {
+    docker run --rm -it \
+        -v /var/run/docker.sock:/var/run/docker.sock:ro \
+        wagoodman/dive "$@"
+}
+
+draw() {
+    encoded="$(cat "$1" | python3 -c 'import sys; import urllib.parse; print(urllib.parse.quote(sys.stdin.read()))')"
+    link="https://mermaid-server.eks.qcinternal.io/generate?data=${encoded}"
+    echo "${link}"
+    open "${link}"
+}
+
 #git() {
 #    docker run --rm -it \
 #        -v ${HOME}/.ssh:/root/.ssh \
@@ -95,8 +108,16 @@ jq() {
 }
 
 jv() {
-    version="${1:-11}"
+    version="${1:-17}"
     export JAVA_HOME="$(/usr/libexec/java_home -v "$(test "${version}" -lt 9 && echo "1.${version}" || echo "${version}")")"
+}
+
+kafka() {
+    kfversion="${KF_VERSION:-2.12-2.4.1}"
+    docker run --rm -it \
+        -v "$(pwd):/src" \
+        -w /src \
+        wurstmeister/kafka:${kfversion} "$@"
 }
 
 newpr() {
@@ -119,25 +140,61 @@ nsp() {
     chmod +x "${name}"
 }
 
+oncall() {
+    hour="$(TZ=Europe/London date +%H)"
+    day="$(TZ=Europe/London date +%u)"
+    if test "${1}" = 'prev'; then
+        extra_shift='-v -7d'
+    else
+        extra_shift=''
+    fi
+    if test "${day}" -eq 2; then
+        if test "${hour}" -lt 14; then
+            start="$(TZ=Europe/London date -v -7d ${extra_shift} '+%Y-%m-%d')"
+            end="$(TZ=Europe/London date ${extra_shift} '+%Y-%m-%d')"
+        else
+            start="$(TZ=Europe/London date ${extra_shift} '+%Y-%m-%d')"
+            end="$(TZ=Europe/London date -v +7d ${extra_shift} '+%Y-%m-%d')"
+        fi
+    else
+        start="$(TZ=Europe/London date -v -Tue ${extra_shift} '+%Y-%m-%d')"
+        end="$(TZ=Europe/London date -v +Tue ${extra_shift} '+%Y-%m-%d')"
+    fi
+    url="https://jira.quantcast.com/issues/?jql=issuetype%20%3D%20Ticket%20AND%20created%20%3E%3D%20%22${start}%2014%3A00%22%20AND%20created%20%3C%20%22${end}%2014%3A00%22%20AND%20project%20%3D%20%22UTS%20Bidder%20Services%22%20ORDER%20BY%20%20created%20DESC"
+    open "${url}"
+}
+
 packer() {
-    pkversion="${PK_VERSION:-1.7.3}"
+    pkversion="${PK_VERSION:-1.7.10}"
     docker run --rm -it \
         -v ${HOME}/.aws:/root/.aws:ro \
+        -v ${HOME}/.config/packer:/root/.config/packer \
         -v "$(pwd):/src" \
         -w /src \
         hashicorp/packer:${pkversion} "$@"
 }
 
+psample() {
+    true
+    #vault login -method ldap
+    #vault read -field pixel-kafka-admin.keystore bds/production/pixel/pixel-events/kafka-admin | sed 's/\x1b\[0*m//g' | base64 -D > pixel-kafka-admin.keystore
+    #vault read -field config.properties bds/production/pixel/pixel-events/kafka-admin | sed 's/\x1b\[0*m//g' > config.properties
+    #bootstrap='b-4.pixel-events-pixel-pro.vpthu1.c4.kafka.us-west-2.amazonaws.com:9094,b-1.pixel-events-pixel-pro.vpthu1.c4.kafka.us-west-2.amazonaws.com:9094,b-5.pixel-events-pixel-pro.vpthu1.c4.kafka.us-west-2.amazonaws.com:9094'
+    #protobufs="${HOME}/src/qc/REALTIME-protobuf"
+    #num_samples=1
+    #docker run --rm -i -v "$(pwd):/src:ro" -w /src confluentinc/cp-kafkacat kafkacat -C -F config.properties -b "${bootstrap}" -t pixel-events -o end -D '' -c "${num_samples}" | protoc --decode Pixel --proto_path "${protobufs}/src/main/proto" --proto_path "${protobufs}/src/main/proto3" "${protobufs}/src/main/proto/pixel-entry.proto"
+}
+
 pssh() {
     docker run --rm -i \
-        -v ~/.ssh:/root/.ssh:ro \
+        -v ${HOME}/.ssh:/root/.ssh:ro \
         -v "$(pwd):/src" \
         -w /src \
-        reactivehub/pssh parallel-ssh -l ${USER} "$@"
+        reactivehub/pssh parallel-ssh -l ${USER} -o PermitLocalCommand=no "$@"
 }
 
 terraform() {
-    tfversion="${TF_VERSION:-1.0.1}"
+    tfversion="${TF_VERSION:-1.0.5}"
     docker run --rm -i \
         -v ${HOME}/.aws:/root/.aws:ro \
         -v ${HOME}/.ssh:/root/.ssh:ro \
@@ -148,14 +205,16 @@ terraform() {
 }
 
 vault() {
-    vtversion="${VT_VERSION:-1.7.3}"
+    vtversion="${VT_VERSION:-1.8.2}"
+    address="${VAULT_ADDR:-https://vault.int.quantcast.com:8200}"
     docker run --rm -it \
         --entrypoint '' \
-        -e USER=${USER} \
-        -e VAULT_ADDR=https://vault.int.quantcast.com:8200 \
+        -e "USER=${USER}" \
+        -e "VAULT_ADDR=${address}" \
         -v "$(pwd):/src" \
+        -v ${HOME}/.vault-root:/root \
         -w /src \
-        vault:${vtversion} ash
+        vault:${vtversion} vault "$@"
 }
 
 yarn() {
@@ -178,3 +237,4 @@ alias djj='ant deploy-job.jar -Ddeploy.host=launch0'
 alias fp='~/src/foss/brendangregg/FlameGraph/stackcollapse-perf.pl | ~/src/foss/brendangregg/FlameGraph/flamegraph.pl'
 alias gp='gpg --sign -u "${EMAIL}" -o /dev/null ~/.gitmessage'
 alias upcask="brew upgrade --cask \$(brew list --cask -1 --full-name | sort | tr '\n' ' ')"
+alias vt='vault login -method ldap -no-store -token-only'
