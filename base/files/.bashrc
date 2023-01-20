@@ -37,6 +37,10 @@ if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
     export PATH="${path}:${PATH}"
 fi
 
+if test -d /opt/homebrew/bin ; then
+    export PATH="${PATH}:/opt/homebrew/bin"
+fi
+
 # Git prompt
 if test -e ~/lib/git-prompt.sh; then
     source ~/lib/git-prompt.sh
