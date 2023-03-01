@@ -32,13 +32,13 @@ export CLICOLOR=1
 
 export PATH="${PATH/\/usr\/sbin//usr/local/sbin:/usr/sbin}"
 
+if test -d /opt/homebrew/bin ; then
+    export PATH="/opt/homebrew/bin:${PATH}"
+fi
+
 path="${HOME}/bin"
 if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
     export PATH="${path}:${PATH}"
-fi
-
-if test -d /opt/homebrew/bin ; then
-    export PATH="${PATH}:/opt/homebrew/bin"
 fi
 
 # Git prompt
@@ -99,7 +99,7 @@ fetch() {
 ggb() {
     arg="$1"
     shift
-    git grep "\b${arg}\b" "$@"
+    git grep -w "${arg}" "$@"
 }
 
 gitup() {
@@ -129,14 +129,15 @@ total() {
 set +a
 
 alias g="echo -e '\n===== BRANCHES =====\n' && git branch && echo -e '\n===== LATEST =====\n' && git --no-pager log -n 2 && echo -e '\n===== STATUS =====\n' && git status -sb && echo"
-alias rgl="rm -rfv ~/.go"
-alias rml="rm -rfv ~/.m2"
+alias gd='git diff'
+alias rgl='rm -rfv ~/.go'
+alias rml='rm -rfv ~/.m2'
 
 # Docker convenience
-alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:5000\\/' | LC_COLLATE=C sort -k 1 && echo"
+alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | egrep -v '^registry\\.k8s\\.io\\/' | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:5000\\/' | LC_COLLATE=C sort -k 1 && echo"
 alias dr='docker run --rm -it -w /src -v "$(pwd):/src"'
 alias dcat='docker run --rm -i -w /src -v "$(pwd):/src"'
-alias dgc="docker system prune --volumes"
+alias dgc='docker system prune --volumes'
 
 # Vim convenience
 alias v='vim -p'

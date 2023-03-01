@@ -236,5 +236,6 @@ alias cti='ant clean test integ-test'
 alias djj='ant deploy-job.jar -Ddeploy.host=launch0'
 alias fp='~/src/foss/brendangregg/FlameGraph/stackcollapse-perf.pl | ~/src/foss/brendangregg/FlameGraph/flamegraph.pl'
 alias gp='gpg --sign -u "${EMAIL}" -o /dev/null ~/.gitmessage'
+alias sshp='ssh-plus.sh'
 alias upcask="brew upgrade --cask \$(brew list --cask -1 --full-name | sort | tr '\n' ' ')"
 alias vt='vault login -method ldap -no-store -token-only'
