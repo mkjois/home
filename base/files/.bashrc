@@ -231,6 +231,7 @@ alias vimup='for d in $(find ~/.vim/bundle -type d -depth 1); do pushd $d > /dev
 
 # SSH convenience
 alias sshp='ssh-plus.sh'
+alias sgc='rm -fv ~/.ssh/sockets/*'
 
 # Commands with color
 alias grep=' grep  --color=auto'
