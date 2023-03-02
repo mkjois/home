@@ -29,8 +29,7 @@ tmp
 # Mac OS
 .DS_Store
 
-# Binaries and working repos
-bin
+# Working repos
 opt
 
 # Ant runtime errors

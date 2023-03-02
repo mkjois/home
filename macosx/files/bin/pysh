@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+set -ETeuo pipefail
+
+### ANY PRE-MAIN SETUP GOES HERE
+
+true
+
+### ANY POST-MAIN OR ON-ERROR CLEANUP GOES HERE
+
+err_exit() {
+    echo -e "$2" >&2
+    exit $1
+}
+
+on_exit() {
+    exit_code=$?
+    if test ${exit_code} -eq 0; then
+        true
+    else
+        echo -e '\nFailed' >&2
+    fi
+}
+
+trap on_exit EXIT
+
+### MAIN CODE GOES HERE
+
+image_tag="${1:-3-alpine}"
+deps_dir="$(pwd)"
+
+if test "${1:-NONE}" != 'NONE'; then
+    shift
+fi
+packages="$@"
+
+if test -f "$(pwd)/${image_tag}"; then
+    deps_dir="$(dirname "$(pwd)/${image_tag}")"
+    image_tag="$(cat "$(pwd)/${image_tag}" | grep -E '^FROM python:' | head -n 1 | cut -d ' ' -f 2 | cut -d ':' -f 2)"
+fi
+
+if ! [[ "${image_tag}" =~ ^3[a-z0-9._-]*$ ]]; then
+    err_exit 1 "Unsupported image: 'python:${image_tag}'"
+fi
+
+docker pull python:${image_tag}
+
+shell='bash'
+if [[ "${image_tag}" =~ alpine ]]; then
+    shell='ash'
+fi
+
+docker run --rm -it \
+    --entrypoint /tmp/entry.sh \
+    -e "SHELL=/bin/${shell}" \
+    -e "PACKAGES=${packages}" \
+    -v "${HOME}/lib/pysh-entry-${shell}.sh:/tmp/entry.sh:ro" \
+    -v "${HOME}/.aws:/root/.aws:ro" \
+    -v "${HOME}/.ssh:/root/.ssh:ro" \
+    -v "${deps_dir}:/deps" \
+    -v "$(pwd):/src" \
+    -w /src \
+    python:${image_tag} ${shell}

@@ -1,6 +1,15 @@
 test -e ~/.basebashrc && source ~/.basebashrc
 
-export JAVA_HOME="$(/usr/libexec/java_home -v 14)"
+export SSH_TAKE_FILES+=" ${HOME}/.bashrc"
+
+export NAME="Manny Jois"
+export EMAIL="mjois@quantcast.com"
+
+default_java_version=17
+if /usr/libexec/java_home -v ${default_java_version} > /dev/null 2> /dev/null; then
+    export JAVA_HOME="$(/usr/libexec/java_home -v ${default_java_version})"
+fi
+
 export GOPATH="${HOME}/src/go"
 
 path="${GOPATH}/bin"
@@ -46,14 +55,6 @@ ant() {
         docker-registry.infra.quantcast.com:5000/jdk-${jdkversion}-ant-${antversion} ant "$@"
 }
 
-aws() {
-    docker run --rm -i \
-        -v ${HOME}/.aws:/root/.aws:ro \
-        -v ${HOME}/.kube:/root/.kube \
-        -v "$(pwd):/aws" \
-        amazon/aws-cli "$@"
-}
-
 cg() {
     repo="${1:-NONE}"
     matching_dirs="$(find "${GOPATH}/src" -type d -maxdepth 4 -name '\.git' | grep -E "/${repo}[^/]*/\.git\$")"
@@ -69,47 +70,11 @@ cg() {
     fi
 }
 
-dive() {
-    docker run --rm -it \
-        -v /var/run/docker.sock:/var/run/docker.sock:ro \
-        wagoodman/dive "$@"
-}
-
 draw() {
     encoded="$(cat "$1" | python3 -c 'import sys; import urllib.parse; print(urllib.parse.quote(sys.stdin.read()))')"
     link="https://mermaid-server.eks.qcinternal.io/generate?data=${encoded}"
     echo "${link}"
     open "${link}"
-}
-
-#git() {
-#    docker run --rm -it \
-#        -v ${HOME}/.ssh:/root/.ssh \
-#        -v ${HOME}/.gitconfig:/root/.gitconfig \
-#        -v ${HOME}/.gitignore:/root/.gitignore:ro \
-#        -v ${HOME}/.gitmessage:/root/.gitmessage:ro \
-#        -v "$(pwd):/git" \
-#        alpine/git "$@"
-#}
-
-gitbook() {
-    docker run --rm -it \
-        -v "$(pwd):/src" \
-        -w /src \
-        -p 4000:4000 \
-        qc/gitbook gitbook "$@"
-}
-
-jq() {
-    docker run --rm -i \
-        -v "$(pwd):/src" \
-        -w /src \
-        imega/jq "$@"
-}
-
-jv() {
-    version="${1:-17}"
-    export JAVA_HOME="$(/usr/libexec/java_home -v "$(test "${version}" -lt 9 && echo "1.${version}" || echo "${version}")")"
 }
 
 kafka() {
@@ -126,18 +91,6 @@ newpr() {
     else
         open "https://github.corp.qc/$(git remote get-url origin | cut -d ':' -f 2 | cut -d '.' -f 1)/compare/$(git branch | grep \* | cut -d ' ' -f 2)"
     fi
-}
-
-nsb() {
-    name="${1:-asdf.sh}"
-    cp ~/lib/script-template-bash.sh "${name}"
-    chmod +x "${name}"
-}
-
-nsp() {
-    name="${1:-asdf.py}"
-    cp ~/lib/script-template-python.py "${name}"
-    chmod +x "${name}"
 }
 
 oncall() {
@@ -164,16 +117,6 @@ oncall() {
     open "${url}"
 }
 
-packer() {
-    pkversion="${PK_VERSION:-1.7.10}"
-    docker run --rm -it \
-        -v ${HOME}/.aws:/root/.aws:ro \
-        -v ${HOME}/.config/packer:/root/.config/packer \
-        -v "$(pwd):/src" \
-        -w /src \
-        hashicorp/packer:${pkversion} "$@"
-}
-
 psample() {
     true
     #vault login -method ldap
@@ -185,27 +128,8 @@ psample() {
     #docker run --rm -i -v "$(pwd):/src:ro" -w /src confluentinc/cp-kafkacat kafkacat -C -F config.properties -b "${bootstrap}" -t pixel-events -o end -D '' -c "${num_samples}" | protoc --decode Pixel --proto_path "${protobufs}/src/main/proto" --proto_path "${protobufs}/src/main/proto3" "${protobufs}/src/main/proto/pixel-entry.proto"
 }
 
-pssh() {
-    docker run --rm -i \
-        -v ${HOME}/.ssh:/root/.ssh:ro \
-        -v "$(pwd):/src" \
-        -w /src \
-        reactivehub/pssh parallel-ssh -l ${USER} -o PermitLocalCommand=no "$@"
-}
-
-terraform() {
-    tfversion="${TF_VERSION:-1.0.5}"
-    docker run --rm -i \
-        -v ${HOME}/.aws:/root/.aws:ro \
-        -v ${HOME}/.ssh:/root/.ssh:ro \
-        -v ${HOME}/.terraform.d:/root/.terraform.d \
-        -v "$(pwd):/src" \
-        -w /src \
-        hashicorp/terraform:${tfversion} "$@"
-}
-
 vault() {
-    vtversion="${VT_VERSION:-1.8.2}"
+    vtversion="${VT_VERSION:-1.12.3}"
     address="${VAULT_ADDR:-https://vault.int.quantcast.com:8200}"
     docker run --rm -it \
         --entrypoint '' \
@@ -217,16 +141,6 @@ vault() {
         vault:${vtversion} vault "$@"
 }
 
-yarn() {
-    nodeversion="${NODE_VERSION:-14}"
-    docker run --rm -it \
-        -v ${HOME}/.ssh:/root/.ssh:ro \
-        -v "$(pwd):/src" \
-        -w /src \
-        -p 3000:3000 \
-        node:${nodeversion}-alpine yarn "$@"
-}
-
 # stop exporting stuff
 set +a
 
@@ -235,7 +149,5 @@ alias alpd='docker run --rm -it -v ${HOME}/.aws:/root/.aws docker-registry.infra
 alias cti='ant clean test integ-test'
 alias djj='ant deploy-job.jar -Ddeploy.host=launch0'
 alias fp='~/src/foss/brendangregg/FlameGraph/stackcollapse-perf.pl | ~/src/foss/brendangregg/FlameGraph/flamegraph.pl'
-alias gp='gpg --sign -u "${EMAIL}" -o /dev/null ~/.gitmessage'
-alias sshp='ssh-plus.sh'
 alias upcask="brew upgrade --cask \$(brew list --cask -1 --full-name | sort | tr '\n' ' ')"
 alias vt='vault login -method ldap -no-store -token-only'
