@@ -33,6 +33,5 @@ tmp
 opt
 
 # Ant runtime errors
-core
 hs_err_*.log
 junit*.properties

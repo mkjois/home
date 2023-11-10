@@ -5,8 +5,6 @@ err_exit() { echo -e "$2" >&2; exit $1; }
 on_exit() { exit_code=$?; if test ${exit_code} -ne 0; then echo -e '\nFailed' >&2; fi; }
 trap on_exit EXIT
 
-host="${1}"
-
 ########################################################################
 ##                                                                    ##
 ## FROM LOCAL                                                         ##
@@ -33,7 +31,7 @@ local_command="rsync -aLKzv \
 exec ssh \
     -o "LocalCommand=${local_command}" \
     -o 'PermitLocalCommand=yes' \
-    "${host}"
+    "$@"
 
 exit
 
@@ -63,4 +61,4 @@ ssh-add -t "${identity_persistence_time_sec}" "${HOME}/.ssh/id_rsa"
 
 exec ssh -At \
     -o "RemoteCommand=${remote_command}" \
-    "${host}"
+    "$@"

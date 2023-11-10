@@ -6,6 +6,7 @@ test -e /etc/bashrc && source /etc/bashrc
 export SSH_TAKE_FILES="${HOME}/.basebashrc"
 export SSH_TAKE_FILES+=" ${HOME}/.basevimrc"
 export SSH_TAKE_FILES+=" ${HOME}/.vimrc"
+export SSH_TAKE_FILES+=" ${HOME}/bin"
 
 # Reset
 Reset="$(tput sgr0)"
@@ -46,8 +47,17 @@ export CLICOLOR=1
 
 export PATH="${PATH/\/usr\/sbin//usr/local/sbin:/usr/sbin}"
 
+# Kinda weird chicken and egg problem, but okay.
 if test -d /opt/homebrew/bin ; then
-    export PATH="/opt/homebrew/bin:${PATH}"
+    brew_prefix="$(/opt/homebrew/bin/brew --prefix)"
+    if test -d "${brew_prefix}/bin" ; then
+        export PATH="${brew_prefix}/bin:${brew_prefix}/sbin:${PATH}"
+    fi
+fi
+
+path="${HOME}/.docker/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
 fi
 
 path="${HOME}/bin"
@@ -59,31 +69,42 @@ fi
 if test -e "${HOME}/git-prompt.sh"; then
     source "${HOME}/git-prompt.sh"
     export SSH_TAKE_FILES+=" ${HOME}/git-prompt.sh"
-elif which -s git && test -e "$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh")"; then
+elif which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh")" > /dev/null 2> /dev/null ; then
     git_prompt_path="$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh")"
     source "${git_prompt_path}"
     export SSH_TAKE_FILES+=" ${git_prompt_path}"
 fi
 
-set_prompt () {
-    Last="$(printf '%03d' $?)"
+# Super awesome custom prompt with all kinds of information.
+set_prompt() {
+    _last="$(printf '%03d' $?)"
+    _time_cmd_end="$(date +%s)"
+    _diff="$((${_time_cmd_end} - ${_time_cmd_start}))"
+    [[ ${_num_hook_runs} < 2 ]] && _diff=0
+    _num_hook_runs=0
     PS1=''
-    [[ $Last == "000" ]] && PS1+="\[$NGreen\]" || PS1+="\[$NRed\]"
-    PS1+="$Last "
-    [[ $EUID == 0 ]] && PS1+="\[$BRed\]" || PS1+="\[$BGreen\]"
-    Branch="$(__git_ps1 "[%s]" || echo '')"
-    PS1+="\u\[$NYellow\]@${HOSTNAME%%.*} \[$BPurple\]$Branch\[$BBlue\]\w\n"
-    [[ $EUID == 0 ]] && PS1+="\[$BRed\]" || PS1+="\[$BGreen\]"
+    [[ ${_last} == "000" ]] && PS1+="\[$NGreen\]" || PS1+="\[$NRed\]"
+    PS1+="${_last} \[$NCyan\]${_diff}s "
+    [[ ${EUID} == 0 ]] && PS1+="\[$BRed\]" || PS1+="\[$BGreen\]"
+    _branch="$(__git_ps1 "[%s]" || echo '')"
+    PS1+="\u\[$NYellow\]@${HOSTNAME%%.*} \[$BPurple\]$_branch\[$BBlue\]\w\n"
+    [[ ${EUID} == 0 ]] && PS1+="\[$BRed\]" || PS1+="\[$BGreen\]"
     PS1+="\$ \[$BBlack\]"
-    [[ $EUID == 0 ]] && PS2="\[$BRed\]> \[$BBlack\]" || PS2="\[$BGreen\]> \[$BBlack\]"
-    [[ $EUID == 0 ]] && PS4="\[$BRed\]+ \[$BBlack\]" || PS4="\[$BGreen\]+ \[$BBlack\]"
+    [[ ${EUID} == 0 ]] && PS2="\[$BRed\]> \[$BBlack\]" || PS2="\[$BGreen\]> \[$BBlack\]"
+    [[ ${EUID} == 0 ]] && PS4="\[$BRed\]+ \[$BBlack\]" || PS4="\[$BGreen\]+ \[$BBlack\]"
 }
 PROMPT_COMMAND='set_prompt'
 
-# Reset color after command is entered
-trap 'echo -ne $Reset' DEBUG
+# Start timer and reset color after command is entered.
+_num_hook_runs=0
+run_hook() {
+    [[ ${_num_hook_runs} == 0 ]] && _time_cmd_start="$(date +%s)"
+    _num_hook_runs="$((1 + ${_num_hook_runs}))"
+    echo -ne "$Reset"
+}
+trap 'run_hook' DEBUG
 
-# Send signal to rewrap text on window size change
+# Send signal to rewrap text on window size change.
 shopt -s checkwinsize
 
 # Command history
@@ -98,11 +119,7 @@ export HISTIGNORE='d:g:l:la:ll:lr:ls:bg:fg:jobs:clear:reset:exit:history'
 set -a
 
 aws() {
-    docker run --rm -i \
-        -v ${HOME}/.aws:/root/.aws:ro \
-        -v ${HOME}/.kube:/root/.kube \
-        -v "$(pwd):/aws" \
-        amazon/aws-cli "$@"
+    aws-docker.sh "$@"
 }
 
 colors() {
@@ -183,7 +200,7 @@ psql() {
 
 pssh() {
     docker run --rm -i \
-        -v ${HOME}/.ssh:/root/.ssh:ro \
+        -v ${HOME}/.ssh:/root/.ssh \
         -v "$(pwd):/src" \
         -w /src \
         reactivehub/pssh parallel-ssh -l ${USER} -O 'PermitLocalCommand=no' "$@"
@@ -193,6 +210,13 @@ serve() {
     path="${1:-.}"
     port="${2:-8080}"
     python3 -m http.server -d "${path}" -b 0.0.0.0 "${port}"
+}
+
+servet() {
+    path="${1:-.}"
+    set="${2:-test}"
+    port="${3:-8080}"
+    python3 -m http.server -d "${path}/build/reports/tests/${set}/" -b 0.0.0.0 "${port}"
 }
 
 terraform() {
@@ -210,6 +234,12 @@ total() {
     awk '{sum += $1} END {print sum}'
 }
 
+yq() {
+    docker run --rm -i \
+        -v "$(pwd):/workdir" \
+        mikefarah/yq "$@"
+}
+
 # stop exporting stuff
 set +a
 
@@ -220,14 +250,16 @@ alias rgl='rm -rfv ~/.go'
 alias rml='rm -rfv ~/.m2'
 
 # Docker convenience
-alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | egrep -v '^registry\\.k8s\\.io\\/' | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:5000\\/' | LC_COLLATE=C sort -k 1 && echo"
+alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | egrep -v '^registry\\.k8s\\.io\\/' | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:\\d{4}\\/' | LC_COLLATE=C sort -k 1 && echo"
+alias dup="docker image ls | egrep -v '^registry\\.k8s\\.io\\/' | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:\\d{4}\\/' | LC_COLLATE=C sort -k 1 | grep ' latest ' | awk '{print \$1}' | xargs -L 1 docker image pull"
 alias dr='docker run --rm -it -w /src -v "$(pwd):/src"'
 alias dcat='docker run --rm -i -w /src -v "$(pwd):/src"'
-alias dgc='docker system prune --volumes'
+alias dgc='docker system prune --volumes && docker volume ls -q -f dangling=true | xargs docker volume rm'
 
 # Vim convenience
 alias v='vim -p'
 alias vimup='for d in $(find ~/.vim/bundle -type d -depth 1); do pushd $d > /dev/null && git pull && popd > /dev/null; done'
+alias vsk='v ~/tmp/skratch.txt'
 
 # SSH convenience
 alias sshp='ssh-plus.sh'

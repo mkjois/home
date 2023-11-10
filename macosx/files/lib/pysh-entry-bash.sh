@@ -15,7 +15,7 @@ err_exit() {
 
 on_exit() {
     exit_code=$?
-    if test ${exit_code} -eq 0; then
+    if test ${exit_code} -eq 0 ; then
         true
     else
         echo -e '\nFailed' >&2
@@ -26,18 +26,32 @@ trap on_exit EXIT
 
 ### MAIN CODE GOES HERE
 
-if test "${PACKAGES}"; then
+if test "${PACKAGES}" ; then
     apt update
     apt install -y --no-install-recommends ${PACKAGES}
 fi
 
-if test -f /deps/requirements.txt; then
-    pip install --no-cache-dir --upgrade pip
-    pip install --no-cache-dir -r /deps/requirements.txt
+pip install --upgrade pip
+pip install black 'black[jupyter]'
 
-    if test -f /deps/requirements-test.txt; then
-        pip install --no-cache-dir -r /deps/requirements-test.txt
+if test -f /deps/requirements.txt ; then
+    pip install -r /deps/requirements.txt
+
+    if test -f /deps/requirements-test.txt ; then
+        pip install -r /deps/requirements-test.txt
     fi
+fi
+
+if find . -type f -name pyproject.toml ! -path './.git/*' | grep -q . ; then
+    curl -sSL https://install.python-poetry.org | python3 -
+    export PATH="${HOME}/.local/bin:$PATH"
+    apt update
+    apt install -y --no-install-recommends bash-completion
+    poetry completions bash >> ~/.bash_completion
+fi
+
+if test -f ./tasks.py ; then
+    pip install invoke
 fi
 
 exec "$@"
