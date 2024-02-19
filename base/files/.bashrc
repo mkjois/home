@@ -47,6 +47,11 @@ export CLICOLOR=1
 
 export PATH="${PATH/\/usr\/sbin//usr/local/sbin:/usr/sbin}"
 
+default_java_version=21
+if /usr/libexec/java_home -v ${default_java_version} > /dev/null 2> /dev/null; then
+    export JAVA_HOME="$(/usr/libexec/java_home -v ${default_java_version})"
+fi
+
 # Kinda weird chicken and egg problem, but okay.
 if test -d /opt/homebrew/bin ; then
     brew_prefix="$(/opt/homebrew/bin/brew --prefix)"
@@ -166,7 +171,7 @@ jq() {
 }
 
 jv() {
-    version="${1:-17}"
+    version="${1:-${default_java_version}}"
     export JAVA_HOME="$(/usr/libexec/java_home -v "$(test "${version}" -lt 9 && echo "1.${version}" || echo "${version}")")"
 }
 
@@ -258,7 +263,7 @@ alias dgc='docker system prune --volumes && docker volume ls -q -f dangling=true
 
 # Vim convenience
 alias v='vim -p'
-alias vimup='for d in $(find ~/.vim/bundle -type d -depth 1); do pushd $d > /dev/null && git pull && popd > /dev/null; done'
+alias vimup='for d in $(find ~/.vim/bundle -type d -depth 1); do pushd $d > /dev/null && git p && popd > /dev/null; done'
 alias vsk='v ~/tmp/skratch.txt'
 
 # SSH convenience

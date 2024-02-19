@@ -8,11 +8,6 @@ export SSH_TAKE_FILES+=" ${HOME}/.gitconfig"
 export NAME="Manny Jois"
 export EMAIL="mjois@quantcast.com"
 
-default_java_version=17
-if /usr/libexec/java_home -v ${default_java_version} > /dev/null 2> /dev/null; then
-    export JAVA_HOME="$(/usr/libexec/java_home -v ${default_java_version})"
-fi
-
 export GOPATH="${HOME}/src/go"
 
 path="${GOPATH}/bin"
@@ -193,9 +188,9 @@ vault() {
 set +a
 
 alias ald='aws --region us-west-2 ecr get-login-password | docker login --username AWS --password-stdin 770498372469.dkr.ecr.us-west-2.amazonaws.com'
-alias alppm='docker run --rm -it -v ${HOME}/.aws:/root/.aws docker-registry.infra.quantcast.com:5000/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform     --role modeling-platform-infrastructure'
-alias alppr='docker run --rm -it -v ${HOME}/.aws:/root/.aws docker-registry.infra.quantcast.com:5000/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform     --role rtb-platform'
-alias alpdr='docker run --rm -it -v ${HOME}/.aws:/root/.aws docker-registry.infra.quantcast.com:5000/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform-dev --role rtb-platform-dev'
+alias alppm='docker run --rm -it -v ${HOME}/.aws:/root/.aws harbor.qcinternal.io/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform     --role modeling-platform-infrastructure'
+alias alppr='docker run --rm -it -v ${HOME}/.aws:/root/.aws harbor.qcinternal.io/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform     --role rtb-platform'
+alias alpdr='docker run --rm -it -v ${HOME}/.aws:/root/.aws harbor.qcinternal.io/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform-dev --role rtb-platform-dev'
 alias cj='cd /efs/notebooks/home/mjois'
 alias cti='ant clean test integ-test'
 alias djj='ant deploy-job.jar -Ddeploy.host=launch0'
