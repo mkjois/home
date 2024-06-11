@@ -139,7 +139,7 @@ colors() {
 dive() {
     docker run --rm -it \
         -v /var/run/docker.sock:/var/run/docker.sock:ro \
-        wagoodman/dive "$@"
+        dockerhub.qcinternal.io/wagoodman/dive "$@"
 }
 
 fetch() {
@@ -167,7 +167,7 @@ jq() {
     docker run --rm -i \
         -v "$(pwd):/src" \
         -w /src \
-        imega/jq "$@"
+        ghcr.qcinternal.io/jqlang/jq "$@"
 }
 
 jv() {
@@ -194,13 +194,13 @@ packer() {
         -v ${HOME}/.config/packer:/root/.config/packer \
         -v "$(pwd):/src" \
         -w /src \
-        hashicorp/packer:${pkversion} "$@"
+        dockerhub.qcinternal.io/hashicorp/packer:${pkversion} "$@"
 }
 
 psql() {
     pgversion="${PG_VERSION:-12}"
     docker run --rm -i \
-        postgres:${pgversion}-alpine psql "$@"
+        dockerhub.qcinternal.io/library/postgres:${pgversion}-alpine psql "$@"
 }
 
 pssh() {
@@ -208,7 +208,7 @@ pssh() {
         -v ${HOME}/.ssh:/root/.ssh \
         -v "$(pwd):/src" \
         -w /src \
-        reactivehub/pssh parallel-ssh -l ${USER} -O 'PermitLocalCommand=no' "$@"
+        dockerhub.qcinternal.io/reactivehub/pssh parallel-ssh -l ${USER} -O 'PermitLocalCommand=no' "$@"
 }
 
 serve() {
@@ -232,7 +232,7 @@ terraform() {
         -v ${HOME}/.terraform.d:/root/.terraform.d \
         -v "$(pwd):/src" \
         -w /src \
-        hashicorp/terraform:${tfversion} "$@"
+        dockerhub.qcinternal.io/hashicorp/terraform:${tfversion} "$@"
 }
 
 total() {
@@ -242,7 +242,7 @@ total() {
 yq() {
     docker run --rm -i \
         -v "$(pwd):/workdir" \
-        mikefarah/yq "$@"
+        dockerhub.qcinternal.io/mikefarah/yq "$@"
 }
 
 # stop exporting stuff
@@ -255,7 +255,7 @@ alias rgl='rm -rfv ~/.go'
 alias rml='rm -rfv ~/.m2'
 
 # Docker convenience
-alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | egrep -v '^registry\\.k8s\\.io\\/' | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:\\d{4}\\/' | LC_COLLATE=C sort -k 1 && echo"
+alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | head -n 1 && docker image ls | egrep -v '^REPOSITORY ' | egrep -v '^registry\\.k8s\\.io\\/' | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:\\d{4}\\/' | LC_COLLATE=C sort -k 1 && echo"
 alias dup="docker image ls | egrep -v '^registry\\.k8s\\.io\\/' | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:\\d{4}\\/' | LC_COLLATE=C sort -k 1 | grep ' latest ' | awk '{print \$1}' | xargs -L 1 docker image pull"
 alias dr='docker run --rm -it -w /src -v "$(pwd):/src"'
 alias dcat='docker run --rm -i -w /src -v "$(pwd):/src"'

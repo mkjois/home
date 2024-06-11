@@ -1,5 +1,4 @@
 # TODO: separate out sensitive stuff
-.bash_aliases
 .ssh/config
 
 # IntelliJ
@@ -15,12 +14,15 @@
 **.asdf
 **.local
 **.tmp
+**.TODO
 asdf.**
 local.**
 tmp.**
+TODO.**
 asdf
 local
 tmp
+TODO
 
 # Python caches and Vim swap files
 **.py[a-z]

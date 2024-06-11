@@ -19,10 +19,6 @@ from typing import Any
 
 import datadog
 
-# No-op handlers by default
-statsd: datadog.dogstatsd.base.DogStatsd = unittest.mock.MagicMock()
-logger: logging.Logger = logging.getLogger(__name__)
-
 '''
 logger.addHandler(logging.NullHandler())
 '''
@@ -30,8 +26,8 @@ logger.addHandler(logging.NullHandler())
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     '''
-    Parse a list of program arguments. Do not include the program name as the
-    first element.
+    Parse a list of program arguments.
+    Do not include the program name as the first element.
     '''
     parser = argparse.ArgumentParser(description='TODO')
     parser.add_argument(
@@ -39,7 +35,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default='info',
         choices=['debug', 'info', 'warning', 'error', 'critical'])
     parser.add_argument(
-        '-z', '--statsd', type=str, default='statsd://localhost:8225/TODO',
+        '-z', '--statsd', type=str, default='statsd://localhost:8125/TODO',
         help='StatsD connection string (e.g. '
              '"statsd://localhost:8125/common.prefix")')
 
@@ -77,7 +73,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def exit(**kwargs: Any) -> None:
     code = kwargs.get('code', 1)
-    log = kwargs.get('log', logger.error if code > 0 else logger.info)
+    log = kwargs.get('log', logging.error if code > 0 else logging.info)
     msg = kwargs.get('msg', 'Success' if code == 0 else 'Failed')
     log(msg)
     sys.exit(code)
@@ -85,7 +81,7 @@ def exit(**kwargs: Any) -> None:
 
 def rm_rf(path: str) -> None:
     try:
-        logger.info(f'Removing directory tree (rm -rf): {path}')
+        logging.info(f'Removing directory tree (rm -rf): {path}')
         shutil.rmtree(path)
     except NotADirectoryError:
         os.remove(path)
@@ -107,7 +103,7 @@ def exit_handler() -> None:
 # Main program helper functions #
 #################################
 
-def configure_logger(args: argparse.Namespace, logger: logging.Logger) -> None:
+def create_logger(args: argparse.Namespace) -> logging.Logger:
     try:
         '''
         handler = logging.handlers.RotatingFileHandler(
@@ -117,28 +113,47 @@ def configure_logger(args: argparse.Namespace, logger: logging.Logger) -> None:
         handler.setFormatter(
             logging.Formatter(
                 '%(asctime)s [%(levelname)s:%(name)s:%(lineno)d] %(message)s'))
+        logger = logging.getLogger(__name__)
         logger.addHandler(handler)
         logger.setLevel(getattr(logging, args.log_level.upper()))
+        return logger
     except IOError as e:
-        exit(msg='Could not configure logging.', log=logging.critical)
+        exit(msg='Could not create logger.', log=logging.critical)
 
 
-def configure_statsd(args: argparse.Namespace) \
-        -> datadog.dogstatsd.base.DogStatsd:
+def create_statsd(args: argparse.Namespace, logger: logging.Logger) \
+        -> datadog.dogstatsd.DogStatsd:
 
     if not args.statsd:
-        return unittest.mock.MagicMock()
+        return unittest.mock.MagicMock() # defaults to no-op
 
     logger.info('Configuring statsd...')
+    statsd_host = os.getenv('STATSD_HOST', 'localhost')
+    statsd_port = os.getenv('STATSD_PORT', 8125)
+
     url = urllib.parse.urlparse(args.statsd)
     if url.scheme != 'statsd' or not re.match(r'^(/[\w\-.]*)?$', url.path):
         exit(msg=f'Invalid statsd connection string: {args.statsd}')
+    if url.hostname != 'k8s':
+        statsd_host = url.hostname
+        statsd_port = url.port
 
-    datadog.initialize(
-            statsd_host=url.hostname,
-            statsd_port=url.port,
-            statsd_namespace=url.path.lstrip('/'))
-    return datadog.statsd
+    metric_namespace = url.path.lstrip('/')
+    metric_tags = []
+
+    logger.info(f'''
+        StatsD host: {statsd_host}
+        StatsD port: {statsd_port}
+        Metric namespace: {metric_namespace}
+        Metric tags: {metric_tags}
+    ''')
+
+    return datadog.dogstatsd.DogStatsd(
+            host=statsd_host,
+            port=statsd_port,
+            namespace=metric_namespace,
+            constant_tags=metric_tags,
+            origin_detection_enabled=False)
 
 
 ################
@@ -148,6 +163,6 @@ def configure_statsd(args: argparse.Namespace) \
 if __name__ == '__main__':
 
     args = parse_args(sys.argv[1:])
-    configure_logger(args, logger)
+    logger = create_logger(args)
     logger.debug(f'args={args}')
-    statsd = configure_statsd(args)
+    statsd = create_statsd(args, logger)

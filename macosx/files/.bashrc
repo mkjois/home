@@ -51,7 +51,7 @@ ant() {
         -v "$(pwd):/src" \
         -w /src \
         --ulimit core=-1 \
-        docker-registry.infra.quantcast.com:5000/jdk-${jdkversion}-ant-${antversion} ant "$@"
+        harbor.qcinternal.io/qc/jdk-${jdkversion}-ant-${antversion} ant "$@"
 }
 
 cg() {
@@ -81,7 +81,7 @@ kafka() {
     docker run --rm -it \
         -v "$(pwd):/src" \
         -w /src \
-        wurstmeister/kafka:${kfversion} "$@"
+        dockerhub.qcinternal.io/wurstmeister/kafka:${kfversion} "$@"
 }
 
 newpr() {
@@ -168,11 +168,11 @@ psample() {
     #bootstrap='b-4.pixel-events-pixel-pro.vpthu1.c4.kafka.us-west-2.amazonaws.com:9094,b-1.pixel-events-pixel-pro.vpthu1.c4.kafka.us-west-2.amazonaws.com:9094,b-5.pixel-events-pixel-pro.vpthu1.c4.kafka.us-west-2.amazonaws.com:9094'
     #protobufs="${HOME}/src/qc/REALTIME-protobuf"
     #num_samples=1
-    #docker run --rm -i -v "$(pwd):/src:ro" -w /src confluentinc/cp-kafkacat kafkacat -C -F config.properties -b "${bootstrap}" -t pixel-events -o end -D '' -c "${num_samples}" | protoc --decode Pixel --proto_path "${protobufs}/src/main/proto" --proto_path "${protobufs}/src/main/proto3" "${protobufs}/src/main/proto/pixel-entry.proto"
+    #docker run --rm -i -v "$(pwd):/src:ro" -w /src dockerhub.qcinternal.io/confluentinc/cp-kafkacat kafkacat -C -F config.properties -b "${bootstrap}" -t pixel-events -o end -D '' -c "${num_samples}" | protoc --decode Pixel --proto_path "${protobufs}/src/main/proto" --proto_path "${protobufs}/src/main/proto3" "${protobufs}/src/main/proto/pixel-entry.proto"
 }
 
 vault() {
-    vtversion="${VT_VERSION:-1.12.3}"
+    vtversion="${VT_VERSION:-1.14.9}"
     address="${VAULT_ADDR:-https://vault.int.quantcast.com:8200}"
     docker run --rm -it \
         --entrypoint '' \
@@ -181,7 +181,7 @@ vault() {
         -v "$(pwd):/src" \
         -v ${HOME}/.vault-root:/root \
         -w /src \
-        vault:${vtversion} vault "$@"
+        dockerhub.qcinternal.io/hashicorp/vault:${vtversion} vault "$@"
 }
 
 # stop exporting stuff
