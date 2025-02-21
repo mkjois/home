@@ -24,11 +24,26 @@ trap on_exit EXIT
 #fqdn="$(ssh -G "${host}" | grep -E '^hostname ' | cut -d ' ' -f 2)"
 #ip="$(host "${fqdn}" | cut -d ' ' -f 4)"
 
+rm -rf /tmp/.ssh
+mkdir -p /tmp/.ssh
+cp "${HOME}/.ssh/id_rsa.pub" /tmp/.ssh/authorized_keys
+#cat .ssh/id_rsa.pub | grep -E "^$(cat ~/.ssh/id_rsa.pub | sed -r -e 's/(\+|\.)/\\\1/g')\$"
+
+if ! ssh-add -l | awk '{print $3}' | grep -qE "^${HOME}/\\.ssh/id_rsa\$" ; then
+    ssh-add -t 86400 "${HOME}/.ssh/id_rsa"
+fi
+
+gpg -a --export > "${HOME}/.ssh/pubring.gpg.txt"
+
 local_command="rsync -aLKzv \
     -e 'ssh -S none' \
-    ${SSH_TAKE_FILES} %n:~/"
+    ${SSH_TAKE_FILES} \
+    ${HOME}/.ssh/pubring.gpg.txt \
+    %n:~/"
+#-t mjois-jupyter 'echo FINAL; exec $SHELL -l'
 
 exec ssh \
+    -t \
     -o "LocalCommand=${local_command}" \
     -o 'PermitLocalCommand=yes' \
     "$@"

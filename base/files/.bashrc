@@ -60,11 +60,6 @@ if test -d /opt/homebrew/bin ; then
     fi
 fi
 
-path="${HOME}/.docker/bin"
-if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
-    export PATH="${path}:${PATH}"
-fi
-
 path="${HOME}/bin"
 if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
     export PATH="${path}:${PATH}"
@@ -78,6 +73,38 @@ elif which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../
     git_prompt_path="$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh")"
     source "${git_prompt_path}"
     export SSH_TAKE_FILES+=" ${git_prompt_path}"
+fi
+
+# Autocompletion
+if which docker > /dev/null 2> /dev/null ; then
+    source <(docker completion bash)
+fi
+
+if which kubectl > /dev/null 2> /dev/null ; then
+    source <(kubectl completion bash)
+fi
+
+if which orbctl > /dev/null 2> /dev/null ; then
+    source <(orbctl completion bash)
+fi
+
+if which brew > /dev/null 2> /dev/null ; then
+    brew_prefix="$(brew --prefix)"
+    if test -r "${brew_prefix}/etc/profile.d/bash_completion.sh" ; then
+        source "${brew_prefix}/etc/profile.d/bash_completion.sh"
+    fi
+fi
+
+# Start a GPG agent for forwarding.
+if which gpg > /dev/null 2> /dev/null ; then
+    true
+    #gpg -k
+    #if which gpg-agent > /dev/null 2> /dev/null && ! gpg-agent status ; then
+    #    gpg-agent --daemon
+    #fi
+    #if test -r "${HOME}/pubring.gpg.txt" ; then
+    #    gpg --import "${HOME}/pubring.gpg.txt"
+    #fi
 fi
 
 # Super awesome custom prompt with all kinds of information.
@@ -198,7 +225,7 @@ packer() {
 }
 
 psql() {
-    pgversion="${PG_VERSION:-12}"
+    pgversion="${PG_VERSION:-17}"
     docker run --rm -i \
         dockerhub.qcinternal.io/library/postgres:${pgversion}-alpine psql "$@"
 }
@@ -250,13 +277,13 @@ set +a
 
 alias g="echo -e '\n===== BRANCHES =====\n' && git branch && echo -e '\n===== LATEST =====\n' && git --no-pager log -n 2 && echo -e '\n===== STATUS =====\n' && git status -sb && echo"
 alias gd='git diff'
-alias gp='gpg --sign -u "${USER}" -o /dev/null ~/.gitmessage'
+alias gp='gpg --sign -u "${EMAIL}" -o /dev/null ~/.gitmessage'
 alias rgl='rm -rfv ~/.go'
 alias rml='rm -rfv ~/.m2'
 
 # Docker convenience
-alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | head -n 1 && docker image ls | egrep -v '^REPOSITORY ' | egrep -v '^registry\\.k8s\\.io\\/' | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:\\d{4}\\/' | LC_COLLATE=C sort -k 1 && echo"
-alias dup="docker image ls | egrep -v '^registry\\.k8s\\.io\\/' | egrep -v '^k8s\\.gcr\\.io\\/' | egrep -v '^docker\\/' | egrep -v '^hubproxy\\.docker\\.internal:\\d{4}\\/' | LC_COLLATE=C sort -k 1 | grep ' latest ' | awk '{print \$1}' | xargs -L 1 docker image pull"
+alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | head -n 1 && docker image ls | grep -vE '^REPOSITORY ' | grep -vE '^registry\\.k8s\\.io\\/' | grep -vE '^docker\/' | LC_COLLATE=C sort -k 1 && echo"
+alias dup="docker image ls | grep -vE '^REPOSITORY ' | grep -vE '^registry\\.k8s\\.io\\/' | grep -vE '^docker\/' | LC_COLLATE=C sort -k 1 | grep ' latest ' | awk '{print \$1}' | xargs -L 1 docker image pull"
 alias dr='docker run --rm -it -w /src -v "$(pwd):/src"'
 alias dcat='docker run --rm -i -w /src -v "$(pwd):/src"'
 alias dgc='docker system prune --volumes && docker volume ls -q -f dangling=true | xargs docker volume rm'

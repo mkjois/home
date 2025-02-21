@@ -28,17 +28,6 @@ if test -f ~/lib/git-completion.bash; then
     source ~/lib/git-completion.bash
 fi
 
-if which kubectl > /dev/null 2> /dev/null ; then
-    source <(kubectl completion bash)
-fi
-
-if which brew > /dev/null 2> /dev/null ; then
-    brew_prefix="$(brew --prefix)"
-    if test -r "${brew_prefix}/etc/profile.d/bash_completion.sh" ; then
-        source "${brew_prefix}/etc/profile.d/bash_completion.sh"
-    fi
-fi
-
 # export functions for use in scripts
 set -a
 
@@ -116,7 +105,7 @@ oce() {
     open "${url}"
 }
 
-ocm() {
+ocb() {
     day="$(TZ=Europe/London date +%u)"
     hour="$(TZ=Europe/London date +%H)"
     minute="$(TZ=Europe/London date +%M)"
@@ -137,7 +126,32 @@ ocm() {
         start="$(TZ=Europe/London date -v -Tue ${extra_shift} '+%Y-%m-%d')"
         end="$(TZ=Europe/London date -v +Tue ${extra_shift} '+%Y-%m-%d')"
     fi
-    url="https://jira.quantcast.com/issues/?jql=issuetype%20%3D%20Ticket%20AND%20created%20%3E%3D%20%22${start}%2017%3A30%22%20AND%20created%20%3C%20%22${end}%2017%3A30%22%20AND%20project%20in%20(%22UTS%20-%20Modeling%20Platform%20Infrastructure%22%2C%20%22UTS%20-%20Big%20Data%20Platforms%22%2C%20%22UTS%20-%20Data%20Transfer%20Service%22)%20ORDER%20BY%20created%20DESC"
+    url="https://jira.quantcast.com/issues/?jql=issuetype%20in%20(Ticket%2C%20PDINCIDENT)%20AND%20created%20%3E%3D%20%22${start}%2017%3A30%22%20AND%20created%20%3C%20%22${end}%2017%3A30%22%20AND%20project%20in%20(%22UTS%20-%20Modeling%20Platform%20Infrastructure%22%2C%20%22UTS%20-%20Big%20Data%20Platforms%22%2C%20%22UTS%20-%20Data%20Transfer%20Service%22)%20ORDER%20BY%20created%20DESC"
+    open "${url}"
+}
+
+ocm() {
+    day="$(TZ=Europe/London date +%u)"
+    hour="$(TZ=Europe/London date +%H)"
+    minute="$(TZ=Europe/London date +%M)"
+    if test "${1}" = 'prev'; then
+        extra_shift='-v -7d'
+    else
+        extra_shift=''
+    fi
+    if test "${day}" -eq 3; then
+        if test "${hour}" -lt 17 ; then
+            start="$(TZ=Europe/London date -v -7d ${extra_shift} '+%Y-%m-%d')"
+            end="$(TZ=Europe/London date ${extra_shift} '+%Y-%m-%d')"
+        else
+            start="$(TZ=Europe/London date ${extra_shift} '+%Y-%m-%d')"
+            end="$(TZ=Europe/London date -v +7d ${extra_shift} '+%Y-%m-%d')"
+        fi
+    else
+        start="$(TZ=Europe/London date -v -Wed ${extra_shift} '+%Y-%m-%d')"
+        end="$(TZ=Europe/London date -v +Wed ${extra_shift} '+%Y-%m-%d')"
+    fi
+    url="https://jira.quantcast.com/issues/?jql=issuetype%20in%20(Ticket%2C%20PDINCIDENT)%20AND%20created%20%3E%3D%20%22${start}%2017%3A00%22%20AND%20created%20%3C%20%22${end}%2017%3A00%22%20AND%20project%20in%20(%22UTS%20-%20Modeling%20Platform%20Science%22)%20ORDER%20BY%20created%20DESC"
     open "${url}"
 }
 
@@ -194,9 +208,10 @@ alias alpdr='docker run --rm -it -v ${HOME}/.aws:/root/.aws harbor.qcinternal.io
 alias cj='cd /efs/notebooks/home/mjois'
 alias cti='ant clean test integ-test'
 alias djj='ant deploy-job.jar -Ddeploy.host=launch0'
-alias dsock='sudo ln -sf ${HOME}/.docker/run/docker.sock /var/run/docker.sock'
+alias dsock="sudo ln -sf \$(docker context ls | grep -E '^[a-zA-Z0-9_-]+ \\*' | awk '{print \$4}' | sed -r -e 's|^unix://||') /var/run/docker.sock"
 alias fp='~/src/foss/brendangregg/FlameGraph/stackcollapse-perf.pl | ~/src/foss/brendangregg/FlameGraph/flamegraph.pl'
 alias klb='aws --region us-west-2 eks update-kubeconfig --name batch-production-red-usw2 && sed -r -e "s/^([[:space:]]*)command: aws$/\\1command: aws-docker.sh/" -i "" ~/.kube/config'
 alias klm='aws --region us-west-2 eks update-kubeconfig --name main-production-red-usw2 && sed -r -e "s/^([[:space:]]*)command: aws$/\\1command: aws-docker.sh/" -i "" ~/.kube/config'
 alias upcask="brew upgrade --cask \$(brew list --cask -1 --full-name | sort | tr '\n' ' ')"
+alias upcask2="casks=\"\$(brew outdated --cask --greedy --quiet | sort | tr '\n' ' ')\"; brew uninstall --cask \${casks} ; brew install --cask \${casks}"
 alias vt='vault login -method ldap -no-store -token-only'

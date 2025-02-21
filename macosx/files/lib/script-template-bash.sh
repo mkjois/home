@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Standard bash preamble.
+#
 set -ETeuo pipefail
 err_echo() { echo -e "$1" >&2; }
 err_exit() { err_echo "$2"; exit $1; }
