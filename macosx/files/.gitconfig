@@ -1,30 +1,30 @@
 [user]
-	name = Manny Jois
-	email = mjois@quantcast.com
-	signingkey = 7C140E33FE7E45F0
+    name = Manny Jois
+    email = m.k.jois@gmail.com
+    #signingkey = 7C140E33FE7E45F0
 [push]
-	default = simple
+    default = simple
 [core]
-	excludesfile = ~/.gitignore
-	commentChar = ";"
+    excludesfile = ~/.gitignore
+    commentChar = ";"
 [alias]
-	brd = branch -D
-	boot = reset HEAD --
-	chk = checkout
-	com = !gpg --sign -u "${EMAIL}" -o /dev/null ~/.gitmessage && git commit
-	fix = com --amend --no-edit .
-	trash = !git remote prune origin && git prune -v && git gc --aggressive
-	trunk = clone --depth 3 --no-single-branch
+    brd = branch -D
+    boot = reset HEAD --
+    chk = checkout
+    com = !gpg --sign -u "${EMAIL}" -o /dev/null ~/.gitmessage && git commit
+    fix = com --amend --no-edit .
+    trash = !git remote prune origin && git prune -v && git gc --aggressive
+    trunk = clone --depth 3 --no-single-branch
 [commit]
-	template = ~/.gitmessage
-	gpgsign = true
+    template = ~/.gitmessage
+    #gpgsign = true
 [grep]
-	patternType = extended
-	lineNumber = true
+    patternType = extended
+    lineNumber = true
 [pull]
-	ff = only
+    ff = only
 [filter "lfs"]
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
