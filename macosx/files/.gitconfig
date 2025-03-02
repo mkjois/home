@@ -1,28 +1,40 @@
 [user]
     name = Manny Jois
-    email = m.k.jois@gmail.com
-    #signingkey = 7C140E33FE7E45F0
-[push]
-    default = simple
+    email = 3893724+mkjois@users.noreply.github.com
+    signingkey = 99146C1392C62977
 [core]
     excludesfile = ~/.gitignore
     commentChar = ";"
-[alias]
-    brd = branch -D
-    boot = reset HEAD --
-    chk = checkout
-    com = !gpg --sign -u "${EMAIL}" -o /dev/null ~/.gitmessage && git commit
-    fix = com --amend --no-edit .
-    trash = !git remote prune origin && git prune -v && git gc --aggressive
-    trunk = clone --depth 3 --no-single-branch
+[pull]
+    ff = only
+[push]
+    default = simple
 [commit]
     template = ~/.gitmessage
-    #gpgsign = true
+    gpgsign = true
+[tag]
+    gpgsign = true
 [grep]
     patternType = extended
     lineNumber = true
-[pull]
-    ff = only
+[alias]
+    a = add .
+    au = add -u .
+    bd = branch -D
+    r = reset HEAD --
+    c = checkout
+    ca = co --amend --no-edit .
+    cb = checkout -b
+    co = !gpg --sign -u ${EMAIL} -o /dev/null ~/.gitmessage && git commit
+    d = diff
+    p = !git pull origin $(git rev-parse --abbrev-ref HEAD)
+    pu = !git push -u origin $(git rev-parse --abbrev-ref HEAD)
+    pf = push -f
+    s = stash
+    sl = stash list
+    sp = stash pop
+    trash = !git remote prune origin && git prune -v && git gc --aggressive
+    trunk = clone --depth 3 --single-branch
 [filter "lfs"]
     process = git-lfs filter-process
     required = true

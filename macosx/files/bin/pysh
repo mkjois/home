@@ -43,7 +43,7 @@ if ! [[ "${image_tag}" =~ ^3[a-z0-9._-]*$ ]]; then
     err_exit 1 "Unsupported image: 'python:${image_tag}'"
 fi
 
-docker pull dockerhub.qcinternal.io/library/python:${image_tag}
+docker pull python:${image_tag}
 
 shell='bash'
 if [[ "${image_tag}" =~ alpine ]]; then
@@ -60,4 +60,4 @@ docker run --rm -it \
     -v "${deps_dir}:/deps" \
     -v "$(pwd):/src" \
     -w /src \
-    dockerhub.qcinternal.io/library/python:${image_tag} ${shell}
+    python:${image_tag} ${shell}

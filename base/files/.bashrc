@@ -166,7 +166,7 @@ colors() {
 dive() {
     docker run --rm -it \
         -v /var/run/docker.sock:/var/run/docker.sock:ro \
-        dockerhub.qcinternal.io/wagoodman/dive "$@"
+        wagoodman/dive "$@"
 }
 
 fetch() {
@@ -194,7 +194,7 @@ jq() {
     docker run --rm -i \
         -v "$(pwd):/src" \
         -w /src \
-        ghcr.qcinternal.io/jqlang/jq "$@"
+        ghcr.io/jqlang/jq "$@"
 }
 
 jv() {
@@ -221,13 +221,13 @@ packer() {
         -v ${HOME}/.config/packer:/root/.config/packer \
         -v "$(pwd):/src" \
         -w /src \
-        dockerhub.qcinternal.io/hashicorp/packer:${pkversion} "$@"
+        hashicorp/packer:${pkversion} "$@"
 }
 
 psql() {
     pgversion="${PG_VERSION:-17}"
     docker run --rm -i \
-        dockerhub.qcinternal.io/library/postgres:${pgversion}-alpine psql "$@"
+        postgres:${pgversion}-alpine psql "$@"
 }
 
 pssh() {
@@ -235,7 +235,7 @@ pssh() {
         -v ${HOME}/.ssh:/root/.ssh \
         -v "$(pwd):/src" \
         -w /src \
-        dockerhub.qcinternal.io/reactivehub/pssh parallel-ssh -l ${USER} -O 'PermitLocalCommand=no' "$@"
+        reactivehub/pssh parallel-ssh -l ${USER} -O 'PermitLocalCommand=no' "$@"
 }
 
 serve() {
@@ -259,7 +259,7 @@ terraform() {
         -v ${HOME}/.terraform.d:/root/.terraform.d \
         -v "$(pwd):/src" \
         -w /src \
-        dockerhub.qcinternal.io/hashicorp/terraform:${tfversion} "$@"
+        hashicorp/terraform:${tfversion} "$@"
 }
 
 total() {
@@ -269,7 +269,7 @@ total() {
 yq() {
     docker run --rm -i \
         -v "$(pwd):/workdir" \
-        dockerhub.qcinternal.io/mikefarah/yq "$@"
+        mikefarah/yq "$@"
 }
 
 # stop exporting stuff

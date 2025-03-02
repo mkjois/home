@@ -6,7 +6,7 @@ export SSH_TAKE_FILES+=" ${HOME}/.gitmessage"
 export SSH_TAKE_FILES+=" ${HOME}/.gitconfig"
 
 export NAME="Manny Jois"
-export EMAIL="mjois@quantcast.com"
+export EMAIL="m.k.jois@gmail.com"
 
 export GOPATH="${HOME}/src/go"
 
@@ -31,18 +31,6 @@ fi
 # export functions for use in scripts
 set -a
 
-ant() {
-    jdkversion="${JDK_VERSION:-8u212}"
-    antversion="${ANT_VERSION:-1.9.14}"
-    docker run --rm -it \
-        -v ${HOME}/.ivy2:/root/.ivy2 \
-        -v ${HOME}/.m2:/root/.m2 \
-        -v "$(pwd):/src" \
-        -w /src \
-        --ulimit core=-1 \
-        harbor.qcinternal.io/qc/jdk-${jdkversion}-ant-${antversion} ant "$@"
-}
-
 cg() {
     repo="${1:-NONE}"
     matching_dirs="$(find "${GOPATH}/src" -type d -maxdepth 4 -name '\.git' | grep -E "/${repo}[^/]*/\.git\$")"
@@ -60,7 +48,7 @@ cg() {
 
 draw() {
     encoded="$(cat "$1" | python3 -c 'import sys; import urllib.parse; print(urllib.parse.quote(sys.stdin.read()))')"
-    link="https://mermaid-server.eks.qcinternal.io/generate?data=${encoded}"
+    link="https://TODO-mermaid-host/generate?data=${encoded}"
     echo "${link}"
     open "${link}"
 }
@@ -70,14 +58,14 @@ kafka() {
     docker run --rm -it \
         -v "$(pwd):/src" \
         -w /src \
-        dockerhub.qcinternal.io/wurstmeister/kafka:${kfversion} "$@"
+        wurstmeister/kafka:${kfversion} "$@"
 }
 
 newpr() {
     if test "$1"; then
-        open "https://github.corp.qc/$(git remote get-url origin | cut -d ':' -f 2 | cut -d '.' -f 1)/compare/$1...$(git branch | grep \* | cut -d ' ' -f 2)"
+        open "https://github.com/$(git remote get-url origin | cut -d ':' -f 2 | cut -d '.' -f 1)/compare/$1...$(git branch | grep \* | cut -d ' ' -f 2)"
     else
-        open "https://github.corp.qc/$(git remote get-url origin | cut -d ':' -f 2 | cut -d '.' -f 1)/compare/$(git branch | grep \* | cut -d ' ' -f 2)"
+        open "https://github.com/$(git remote get-url origin | cut -d ':' -f 2 | cut -d '.' -f 1)/compare/$(git branch | grep \* | cut -d ' ' -f 2)"
     fi
 }
 
@@ -101,7 +89,7 @@ oce() {
         start="$(TZ=Europe/London date -v -Tue ${extra_shift} '+%Y-%m-%d')"
         end="$(TZ=Europe/London date -v +Tue ${extra_shift} '+%Y-%m-%d')"
     fi
-    url="https://jira.quantcast.com/issues/?jql=issuetype%20%3D%20Ticket%20AND%20created%20%3E%3D%20%22${start}%2014%3A00%22%20AND%20created%20%3C%20%22${end}%2014%3A00%22%20AND%20project%20%3D%20%22UTS%20Bidder%20Services%22%20ORDER%20BY%20created%20DESC"
+    url="https://TODO-jira-host/issues/?jql=issuetype%20%3D%20Ticket%20AND%20created%20%3E%3D%20%22${start}%2014%3A00%22%20AND%20created%20%3C%20%22${end}%2014%3A00%22%20AND%20project%20%3D%20%22UTS%20Bidder%20Services%22%20ORDER%20BY%20created%20DESC"
     open "${url}"
 }
 
@@ -126,7 +114,7 @@ ocb() {
         start="$(TZ=Europe/London date -v -Tue ${extra_shift} '+%Y-%m-%d')"
         end="$(TZ=Europe/London date -v +Tue ${extra_shift} '+%Y-%m-%d')"
     fi
-    url="https://jira.quantcast.com/issues/?jql=issuetype%20in%20(Ticket%2C%20PDINCIDENT)%20AND%20created%20%3E%3D%20%22${start}%2017%3A30%22%20AND%20created%20%3C%20%22${end}%2017%3A30%22%20AND%20project%20in%20(%22UTS%20-%20Modeling%20Platform%20Infrastructure%22%2C%20%22UTS%20-%20Big%20Data%20Platforms%22%2C%20%22UTS%20-%20Data%20Transfer%20Service%22)%20ORDER%20BY%20created%20DESC"
+    url="https://TODO-jira-host/issues/?jql=issuetype%20in%20(Ticket%2C%20PDINCIDENT)%20AND%20created%20%3E%3D%20%22${start}%2017%3A30%22%20AND%20created%20%3C%20%22${end}%2017%3A30%22%20AND%20project%20in%20(%22UTS%20-%20Modeling%20Platform%20Infrastructure%22%2C%20%22UTS%20-%20Big%20Data%20Platforms%22%2C%20%22UTS%20-%20Data%20Transfer%20Service%22)%20ORDER%20BY%20created%20DESC"
     open "${url}"
 }
 
@@ -151,7 +139,7 @@ ocm() {
         start="$(TZ=Europe/London date -v -Wed ${extra_shift} '+%Y-%m-%d')"
         end="$(TZ=Europe/London date -v +Wed ${extra_shift} '+%Y-%m-%d')"
     fi
-    url="https://jira.quantcast.com/issues/?jql=issuetype%20in%20(Ticket%2C%20PDINCIDENT)%20AND%20created%20%3E%3D%20%22${start}%2017%3A00%22%20AND%20created%20%3C%20%22${end}%2017%3A00%22%20AND%20project%20in%20(%22UTS%20-%20Modeling%20Platform%20Science%22)%20ORDER%20BY%20created%20DESC"
+    url="https://TODO-jira-host/issues/?jql=issuetype%20in%20(Ticket%2C%20PDINCIDENT)%20AND%20created%20%3E%3D%20%22${start}%2017%3A00%22%20AND%20created%20%3C%20%22${end}%2017%3A00%22%20AND%20project%20in%20(%22UTS%20-%20Modeling%20Platform%20Science%22)%20ORDER%20BY%20created%20DESC"
     open "${url}"
 }
 
@@ -174,20 +162,9 @@ pods() {
     fi
 }
 
-psample() {
-    true
-    #vault login -method ldap
-    #vault read -field pixel-kafka-admin.keystore bds/production/pixel/pixel-events/kafka-admin | sed 's/\x1b\[0*m//g' | base64 -D > pixel-kafka-admin.keystore
-    #vault read -field config.properties bds/production/pixel/pixel-events/kafka-admin | sed 's/\x1b\[0*m//g' > config.properties
-    #bootstrap='b-4.pixel-events-pixel-pro.vpthu1.c4.kafka.us-west-2.amazonaws.com:9094,b-1.pixel-events-pixel-pro.vpthu1.c4.kafka.us-west-2.amazonaws.com:9094,b-5.pixel-events-pixel-pro.vpthu1.c4.kafka.us-west-2.amazonaws.com:9094'
-    #protobufs="${HOME}/src/qc/REALTIME-protobuf"
-    #num_samples=1
-    #docker run --rm -i -v "$(pwd):/src:ro" -w /src dockerhub.qcinternal.io/confluentinc/cp-kafkacat kafkacat -C -F config.properties -b "${bootstrap}" -t pixel-events -o end -D '' -c "${num_samples}" | protoc --decode Pixel --proto_path "${protobufs}/src/main/proto" --proto_path "${protobufs}/src/main/proto3" "${protobufs}/src/main/proto/pixel-entry.proto"
-}
-
 vault() {
     vtversion="${VT_VERSION:-1.14.9}"
-    address="${VAULT_ADDR:-https://vault.int.quantcast.com:8200}"
+    address="${VAULT_ADDR:-https://TODO-vault-host}"
     docker run --rm -it \
         --entrypoint '' \
         -e "USER=${USER}" \
@@ -195,16 +172,13 @@ vault() {
         -v "$(pwd):/src" \
         -v ${HOME}/.vault-root:/root \
         -w /src \
-        dockerhub.qcinternal.io/hashicorp/vault:${vtversion} vault "$@"
+        hashicorp/vault:${vtversion} vault "$@"
 }
 
 # stop exporting stuff
 set +a
 
 alias ald='aws --region us-west-2 ecr get-login-password | docker login --username AWS --password-stdin 770498372469.dkr.ecr.us-west-2.amazonaws.com'
-alias alppm='docker run --rm -it -v ${HOME}/.aws:/root/.aws harbor.qcinternal.io/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform     --role modeling-platform-infrastructure'
-alias alppr='docker run --rm -it -v ${HOME}/.aws:/root/.aws harbor.qcinternal.io/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform     --role rtb-platform'
-alias alpdr='docker run --rm -it -v ${HOME}/.aws:/root/.aws harbor.qcinternal.io/qc/aws-tools ./qc_aws_login.py -u ${USER} -d 43200 --factor push platform-dev --role rtb-platform-dev'
 alias cj='cd /efs/notebooks/home/mjois'
 alias cti='ant clean test integ-test'
 alias djj='ant deploy-job.jar -Ddeploy.host=launch0'
