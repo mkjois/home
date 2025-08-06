@@ -60,9 +60,33 @@ if test -d /opt/homebrew/bin ; then
     fi
 fi
 
+# Locally built and installed binaries
 path="${HOME}/bin"
 if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
     export PATH="${path}:${PATH}"
+fi
+
+path="${GOPATH}/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi
+
+path="${HOME}/.cargo/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi
+
+# Go toolchain
+export GOPATH="${HOME}/src/go"
+
+# Rust toolchain
+if test -f "${HOME}/.cargo/env"; then
+    source "${HOME}/.cargo/env"
+fi
+
+# Orbstack setup
+if test -f "${HOME}/.orbstack/shell/init.bash"; then
+    source "${HOME}/.orbstack/shell/init.bash" 2> /dev/null
 fi
 
 # Git prompt
@@ -76,6 +100,10 @@ elif which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../
 fi
 
 # Autocompletion
+if test -f "${HOME}/lib/git-completion.bash"; then
+    source "${HOME}/lib/git-completion.bash"
+fi
+
 if which docker > /dev/null 2> /dev/null ; then
     source <(docker completion bash)
 fi
@@ -150,8 +178,19 @@ export HISTIGNORE='d:g:l:la:ll:lr:ls:bg:fg:jobs:clear:reset:exit:history'
 # export functions for use in scripts
 set -a
 
-aws() {
-    aws-docker.sh "$@"
+cg() {
+    repo="${1:-NONE}"
+    matching_dirs="$(find "${GOPATH}/src" -type d -maxdepth 4 -name '\.git' | grep -E "/${repo}[^/]*/\.git\$")"
+    if echo -e "${matching_dirs}" | grep -qE '^$'; then
+        echo -e "\nNo repos found: ${repo}*\n" >&2
+        return 1
+    elif test "$(echo -e "${matching_dirs}" | wc -l | awk '{print $1}')" -eq 1; then
+        cd "$(dirname "${matching_dirs}")"
+    else
+        prefix_to_remove="$(echo "${GOPATH}/src/" | sed 's/\//\\\//g')"
+        echo -e "\nAmbiguous:\n$(echo -e "${matching_dirs}" | sed 's/\/\.git$//' | sed "s/^${prefix_to_remove}/ - /")\n" >&2
+        return 1
+    fi
 }
 
 colors() {
@@ -215,7 +254,7 @@ nsp() {
 }
 
 packer() {
-    pkversion="${PK_VERSION:-1.8.6}"
+    pkversion="${PK_VERSION:-1.14.1}"
     docker run --rm -it \
         -v ${HOME}/.aws:/root/.aws:ro \
         -v ${HOME}/.config/packer:/root/.config/packer \
@@ -225,9 +264,9 @@ packer() {
 }
 
 psql() {
-    pgversion="${PG_VERSION:-17}"
+    pgversion="${PG_VERSION:-17.5}"
     docker run --rm -i \
-        postgres:${pgversion}-alpine psql "$@"
+        postgres:${pgversion} psql "$@"
 }
 
 pssh() {
@@ -252,7 +291,7 @@ servet() {
 }
 
 terraform() {
-    tfversion="${TF_VERSION:-1.3.9}"
+    tfversion="${TF_VERSION:-1.12.2}"
     docker run --rm -i \
         -v ${HOME}/.aws:/root/.aws:ro \
         -v ${HOME}/.ssh:/root/.ssh:ro \
@@ -281,17 +320,23 @@ alias gp='gpg --sign -u "${EMAIL}" -o /dev/null ~/.gitmessage'
 alias rgl='rm -rfv ~/.go'
 alias rml='rm -rfv ~/.m2'
 
+# Brew convenience
+alias upcask="brew outdated --cask --greedy --quiet | sort"
+alias upcask2="brew upgrade --cask \$(brew list --cask -1 --full-name | sort | tr '\n' ' ')"
+alias upcask3="casks=\"\$(brew outdated --cask --greedy --quiet | sort | tr '\n' ' ')\"; brew uninstall --cask \${casks} ; brew install --cask \${casks}"
+
 # Docker convenience
 alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | head -n 1 && docker image ls | grep -vE '^REPOSITORY ' | grep -vE '^registry\\.k8s\\.io\\/' | grep -vE '^docker\/' | LC_COLLATE=C sort -k 1 && echo"
 alias dup="docker image ls | grep -vE '^REPOSITORY ' | grep -vE '^registry\\.k8s\\.io\\/' | grep -vE '^docker\/' | LC_COLLATE=C sort -k 1 | grep ' latest ' | awk '{print \$1}' | xargs -L 1 docker image pull"
 alias dr='docker run --rm -it -w /src -v "$(pwd):/src"'
 alias dcat='docker run --rm -i -w /src -v "$(pwd):/src"'
 alias dgc='docker system prune --volumes && docker volume ls -q -f dangling=true | xargs docker volume rm'
+alias dsock="sudo ln -sf \$(docker context ls | grep -E '^[a-zA-Z0-9_-]+ \\*' | awk '{print \$4}' | sed -r -e 's|^unix://||') /var/run/docker.sock"
 
 # Vim convenience
 alias v='vim -p'
 alias vimup='for d in $(find ~/.vim/bundle -type d -depth 1); do pushd $d > /dev/null && git p && popd > /dev/null; done'
-alias vsk='v ~/tmp/skratch.txt'
+alias vsk='mkdir -p ~/tmp && v ~/tmp/skratch.txt'
 
 # SSH convenience
 alias sshp='ssh-plus.sh'

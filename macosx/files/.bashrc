@@ -5,45 +5,16 @@ export SSH_TAKE_FILES+=" ${HOME}/.gitignore"
 export SSH_TAKE_FILES+=" ${HOME}/.gitmessage"
 export SSH_TAKE_FILES+=" ${HOME}/.gitconfig"
 
-export NAME="Manny Jois"
-export EMAIL="m.k.jois@gmail.com"
-
-export GOPATH="${HOME}/src/go"
-
-path="${GOPATH}/bin"
-if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
-    export PATH="${path}:${PATH}"
-fi
-
-path="${HOME}/.cargo/bin"
-if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
-    export PATH="${path}:${PATH}"
-fi
-
 # iTerm2 integrations
-test -e ~/.iterm2_shell_integration.bash && source ~/.iterm2_shell_integration.bash
-
-# Autocompletion
-if test -f ~/lib/git-completion.bash; then
-    source ~/lib/git-completion.bash
+if test -f "${HOME}/.iterm2_shell_integration.bash"; then
+    source "${HOME}/.iterm2_shell_integration.bash"
 fi
 
 # export functions for use in scripts
 set -a
 
-cg() {
-    repo="${1:-NONE}"
-    matching_dirs="$(find "${GOPATH}/src" -type d -maxdepth 4 -name '\.git' | grep -E "/${repo}[^/]*/\.git\$")"
-    if echo -e "${matching_dirs}" | grep -qE '^$'; then
-        echo -e "\nNo repos found: ${repo}*\n" >&2
-        return 1
-    elif test "$(echo -e "${matching_dirs}" | wc -l | awk '{print $1}')" -eq 1; then
-        cd "$(dirname "${matching_dirs}")"
-    else
-        prefix_to_remove="$(echo "${GOPATH}/src/" | sed 's/\//\\\//g')"
-        echo -e "\nAmbiguous:\n$(echo -e "${matching_dirs}" | sed 's/\/\.git$//' | sed "s/^${prefix_to_remove}/ - /")\n" >&2
-        return 1
-    fi
+aws() {
+    aws-docker.sh "$@"
 }
 
 draw() {
@@ -178,14 +149,9 @@ vault() {
 # stop exporting stuff
 set +a
 
-alias ald='aws --region us-west-2 ecr get-login-password | docker login --username AWS --password-stdin 770498372469.dkr.ecr.us-west-2.amazonaws.com'
-alias cj='cd /efs/notebooks/home/mjois'
-alias cti='ant clean test integ-test'
-alias djj='ant deploy-job.jar -Ddeploy.host=launch0'
-alias dsock="sudo ln -sf \$(docker context ls | grep -E '^[a-zA-Z0-9_-]+ \\*' | awk '{print \$4}' | sed -r -e 's|^unix://||') /var/run/docker.sock"
-alias fp='~/src/foss/brendangregg/FlameGraph/stackcollapse-perf.pl | ~/src/foss/brendangregg/FlameGraph/flamegraph.pl'
 alias klb='aws --region us-west-2 eks update-kubeconfig --name batch-production-red-usw2 && sed -r -e "s/^([[:space:]]*)command: aws$/\\1command: aws-docker.sh/" -i "" ~/.kube/config'
 alias klm='aws --region us-west-2 eks update-kubeconfig --name main-production-red-usw2 && sed -r -e "s/^([[:space:]]*)command: aws$/\\1command: aws-docker.sh/" -i "" ~/.kube/config'
-alias upcask="brew upgrade --cask \$(brew list --cask -1 --full-name | sort | tr '\n' ' ')"
-alias upcask2="casks=\"\$(brew outdated --cask --greedy --quiet | sort | tr '\n' ' ')\"; brew uninstall --cask \${casks} ; brew install --cask \${casks}"
+
+# Miscellany
+alias fp='~/src/foss/brendangregg/FlameGraph/stackcollapse-perf.pl | ~/src/foss/brendangregg/FlameGraph/flamegraph.pl'
 alias vt='vault login -method ldap -no-store -token-only'
