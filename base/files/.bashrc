@@ -7,6 +7,7 @@ export SSH_TAKE_FILES="${HOME}/.basebashrc"
 export SSH_TAKE_FILES+=" ${HOME}/.basevimrc"
 export SSH_TAKE_FILES+=" ${HOME}/.vimrc"
 export SSH_TAKE_FILES+=" ${HOME}/bin"
+export SSH_TAKE_FILES+=" ${HOME}/lib"
 
 # Reset
 Reset="$(tput sgr0)"
@@ -46,11 +47,10 @@ export EMAIL="m.k.jois@gmail.com"
 export CLICOLOR=1
 
 export PATH="${PATH/\/usr\/sbin//usr/local/sbin:/usr/sbin}"
+export GOPATH="${HOME}/src/go"
 
-default_java_version=21
-if /usr/libexec/java_home -v ${default_java_version} > /dev/null 2> /dev/null; then
-    export JAVA_HOME="$(/usr/libexec/java_home -v ${default_java_version})"
-fi
+default_java_version=25
+default_git_fetch_depth=5
 
 # Kinda weird chicken and egg problem, but okay.
 if test -d /opt/homebrew/bin ; then
@@ -60,67 +60,84 @@ if test -d /opt/homebrew/bin ; then
     fi
 fi
 
+# Random programs that decide to install to `~/.local/`
+path="${HOME}/.local/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi
+
+# Rust programs
+path="${HOME}/.cargo/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi
+
+# Go project binaries
+path="${GOPATH}/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi
+
 # Locally built and installed binaries
 path="${HOME}/bin"
 if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
     export PATH="${path}:${PATH}"
 fi
 
-path="${GOPATH}/bin"
-if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
-    export PATH="${path}:${PATH}"
+# Java toolchain
+if /usr/libexec/java_home -v ${default_java_version} > /dev/null 2> /dev/null; then
+    export JAVA_HOME="$(/usr/libexec/java_home -v ${default_java_version})"
 fi
-
-path="${HOME}/.cargo/bin"
-if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
-    export PATH="${path}:${PATH}"
-fi
-
-# Go toolchain
-export GOPATH="${HOME}/src/go"
 
 # Rust toolchain
-if test -f "${HOME}/.cargo/env"; then
+if test -e "${HOME}/.cargo/env"; then
     source "${HOME}/.cargo/env"
 fi
 
 # Orbstack setup
-if test -f "${HOME}/.orbstack/shell/init.bash"; then
+if test -e "${HOME}/.orbstack/shell/init.bash"; then
     source "${HOME}/.orbstack/shell/init.bash" 2> /dev/null
 fi
 
 # Git prompt
-if test -e "${HOME}/git-prompt.sh"; then
-    source "${HOME}/git-prompt.sh"
-    export SSH_TAKE_FILES+=" ${HOME}/git-prompt.sh"
-elif which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh")" > /dev/null 2> /dev/null ; then
+if which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh")" > /dev/null 2> /dev/null ; then
     git_prompt_path="$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh")"
-    source "${git_prompt_path}"
     export SSH_TAKE_FILES+=" ${git_prompt_path}"
+elif test -e "${HOME}/lib/git-prompt.sh"; then
+    source "${HOME}/lib/git-prompt.sh"
+    export SSH_TAKE_FILES+=" ${HOME}/lib/git-prompt.sh"
 fi
 
-# Autocompletion
-if test -f "${HOME}/lib/git-completion.bash"; then
+# Git completion
+if which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../../etc/bash_completion.d/git-completion.bash")" > /dev/null 2> /dev/null ; then
+    git_completion_path="$(realpath "$(which git)/../../etc/bash_completion.d/git-completion.bash")"
+    export SSH_TAKE_FILES+=" ${git_completion_path}"
+elif test -e "${HOME}/lib/git-completion.bash"; then
     source "${HOME}/lib/git-completion.bash"
+    export SSH_TAKE_FILES+=" ${HOME}/lib/git-completion.bash"
 fi
 
-if which docker > /dev/null 2> /dev/null ; then
-    source <(docker completion bash)
-fi
-
-if which kubectl > /dev/null 2> /dev/null ; then
-    source <(kubectl completion bash)
-fi
-
-if which orbctl > /dev/null 2> /dev/null ; then
-    source <(orbctl completion bash)
-fi
-
+# Load all autocompletions
 if which brew > /dev/null 2> /dev/null ; then
     brew_prefix="$(brew --prefix)"
     if test -r "${brew_prefix}/etc/profile.d/bash_completion.sh" ; then
         source "${brew_prefix}/etc/profile.d/bash_completion.sh"
     fi
+fi
+
+# Docker completion
+if which docker  > /dev/null 2> /dev/null && ! complete -p docker  > /dev/null 2> /dev/null ; then
+    source <(docker completion bash)
+fi
+
+# Kubernetes completion
+if which kubectl > /dev/null 2> /dev/null && ! complete -p kubectl > /dev/null 2> /dev/null ; then
+    source <(kubectl completion bash)
+fi
+
+# Orbstack completion
+if which orbctl  > /dev/null 2> /dev/null && ! complete -p orbctl  > /dev/null 2> /dev/null ; then
+    source <(orbctl completion bash)
 fi
 
 # Start a GPG agent for forwarding.
@@ -207,9 +224,16 @@ dive() {
         wagoodman/dive "$@"
 }
 
+draw() {
+    encoded="$(cat "$1" | python3 -c 'import sys; import urllib.parse; print(urllib.parse.quote(sys.stdin.read()))')"
+    link="https://TODO-mermaid-host/generate?data=${encoded}"
+    echo "${link}"
+    open "${link}"
+}
+
 fetch() {
     branch="${1:-master}"
-    depth="${2:-3}"
+    depth="${2:-${default_git_fetch_depth}}"
     git fetch --depth "${depth}" origin "${branch}"
     git checkout -b "${branch}" FETCH_HEAD
     git branch --set-upstream-to "origin/${branch}"
@@ -228,16 +252,17 @@ gitup() {
     git bd "$(git rev-parse --abbrev-ref @{-1})"
 }
 
-jq() {
-    docker run --rm -i \
-        -v "$(pwd):/src" \
-        -w /src \
-        ghcr.io/jqlang/jq "$@"
-}
-
 jv() {
     version="${1:-${default_java_version}}"
     export JAVA_HOME="$(/usr/libexec/java_home -v "$(test "${version}" -lt 9 && echo "1.${version}" || echo "${version}")")"
+}
+
+newpr() {
+    if test "$1"; then
+        open "https://github.com/$(git remote get-url origin | cut -d ':' -f 2 | cut -d '.' -f 1)/compare/$1...$(git branch | grep \* | cut -d ' ' -f 2)"
+    else
+        open "https://github.com/$(git remote get-url origin | cut -d ':' -f 2 | cut -d '.' -f 1)/compare/$(git branch | grep \* | cut -d ' ' -f 2)"
+    fi
 }
 
 nsb() {
@@ -253,19 +278,13 @@ nsp() {
 }
 
 packer() {
-    pkversion="${PK_VERSION:-1.14.1}"
+    pkversion="${PK_VERSION:-1.16.1}"
     docker run --rm -it \
         -v ${HOME}/.aws:/root/.aws:ro \
         -v ${HOME}/.config/packer:/root/.config/packer \
         -v "$(pwd):/src" \
         -w /src \
         hashicorp/packer:${pkversion} "$@"
-}
-
-psql() {
-    pgversion="${PG_VERSION:-17.5}"
-    docker run --rm -i \
-        postgres:${pgversion} psql "$@"
 }
 
 pssh() {
@@ -282,7 +301,7 @@ serve() {
     python3 -m http.server -d "${path}" -b 0.0.0.0 "${port}"
 }
 
-servet() {
+servegt() {
     path="${1:-.}"
     set="${2:-test}"
     port="${3:-8080}"
@@ -290,7 +309,7 @@ servet() {
 }
 
 terraform() {
-    tfversion="${TF_VERSION:-1.12.2}"
+    tfversion="${TF_VERSION:-1.16.3}"
     docker run --rm -i \
         -v ${HOME}/.aws:/root/.aws:ro \
         -v ${HOME}/.ssh:/root/.ssh:ro \
@@ -302,6 +321,19 @@ terraform() {
 
 total() {
     awk '{sum += $1} END {print sum}'
+}
+
+vault() {
+    vtversion="${VT_VERSION:-2.1.1}"
+    address="${VAULT_ADDR:-https://TODO-vault-host}"
+    docker run --rm -it \
+        --entrypoint '' \
+        -e "USER=${USER}" \
+        -e "VAULT_ADDR=${address}" \
+        -v "$(pwd):/src" \
+        -v ${HOME}/.vault-root:/root \
+        -w /src \
+        hashicorp/vault:${vtversion} vault "$@"
 }
 
 yq() {
@@ -357,3 +389,6 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias .......='cd ../../../../../..'
+
+# Miscellany
+alias fp='~/src/foss/brendangregg/FlameGraph/stackcollapse-perf.pl | ~/src/foss/brendangregg/FlameGraph/flamegraph.pl'

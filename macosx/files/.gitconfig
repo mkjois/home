@@ -35,7 +35,7 @@
     sl = stash list
     sp = stash pop
     trash = !git remote prune origin && git prune -v && git gc --aggressive
-    trunk = clone --depth 3 --single-branch
+    trunk = clone --depth 5 --single-branch
 [filter "lfs"]
     process = git-lfs filter-process
     required = true

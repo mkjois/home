@@ -1,6 +1,4 @@
-# `dot/archlinux`
-
-Arch Linux dot files and setup.
+# Arch Linux
 
 **DO NOT COMMIT SENSITIVE FILES!**
 

@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
+# Standard bash preamble.
+#
 set -ETeuo pipefail
-
-### ANY PRE-MAIN SETUP GOES HERE
+err_echo() { echo -e "$1" >&2; }
+err_exit() { err_echo "$2"; exit $1; }
+on_exit() { exit_code=$?; if test ${exit_code} -ne 0; then echo -e '\nFailed' >&2; fi; }
+trap on_exit EXIT
 
 target="${HOME}"
 
@@ -10,16 +14,8 @@ fullname() {
     (cd "$(dirname "$1")" && echo "$(pwd)/$(basename "$1")")
 }
 
-### ANY POST-MAIN OR ON-ERROR CLEANUP GOES HERE
-
-on_exit() {
-    exit_code=$?
-    test ${exit_code} -eq 0 || echo -e '\nFailed' >&2
-}
-
-trap on_exit EXIT
-
-### MAIN CODE GOES HERE
+# TODO: maybe get this working nicely...
+err_exit 1 "405: script not implemented yet..."
 
 find files/ -maxdepth 1 -mindepth 1 | while read thing; do
     b="$(basename "${thing}")"

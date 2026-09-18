@@ -1,12 +1,12 @@
-# `dot`
-
-Dot files. For operating systems that matter.
+# Dotfiles
 
 **DO NOT COMMIT SENSITIVE FILES!**
 
+
 ## Installation
 
-Run `./install.sh`. Follow any prompts. Done.
+Run one of the appropriate installs in `scripts/`. Follow any prompts. Done.
+
 
 ## Development
 

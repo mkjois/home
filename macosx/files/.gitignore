@@ -1,6 +1,9 @@
 # TODO: separate out sensitive stuff
 .ssh/config
 
+# AI
+.claude
+
 # IntelliJ
 .idea
 **.iml
@@ -13,14 +16,17 @@
 # Temporary-file naming conventions
 **.asdf
 **.local
+**.mj[-_]dev
 **.tmp
 **.TODO
 asdf.**
 local.**
+mj[-_]dev.**
 tmp.**
 TODO.**
 asdf
 local
+mj[-_]dev
 tmp
 TODO
 

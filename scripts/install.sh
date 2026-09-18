@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# Standard bash preamble.
+#
+set -ETeuo pipefail
+err_echo() { echo -e "$1" >&2; }
+err_exit() { err_echo "$2"; exit $1; }
+on_exit() { exit_code=$?; if test ${exit_code} -ne 0; then echo -e '\nFailed' >&2; fi; }
+trap on_exit EXIT
+
+DOTFILES_PATH="$(realpath "$(dirname "$0")/..")"
+
+ln -sf "${DOTFILES_PATH}/base/files/.bashrc" "${HOME}/.bashrc"
+ln -sf "${DOTFILES_PATH}/macosx/files/.bash_profile" "${HOME}/.bash_profile"
+ln -sf "${DOTFILES_PATH}/macosx/files/.profile" "${HOME}/.profile"
+
+ln -sf "${DOTFILES_PATH}/base/files/.basevimrc" "${HOME}/.basevimrc"
+ln -sf "${DOTFILES_PATH}/base/files/.vimrc" "${HOME}/.vimrc"
+
+ln -sf "${DOTFILES_PATH}/macosx/files/.gitignore" "${HOME}/.gitignore"
+ln -sf "${DOTFILES_PATH}/macosx/files/.gitmessage" "${HOME}/.gitmessage"
+cp "${DOTFILES_PATH}/macosx/files/.gitconfig" "${HOME}/"
+
+#git config set --global user.email "${EMAIL:-"3893724+mkjois@users.noreply.github.com"}" 2> /dev/null \
+#    || git config --global user.email "${EMAIL:-"3893724+mkjois@users.noreply.github.com"}"
+#git config set --global alias.co 'commit' 2> /dev/null \
+#    || git config --global alias.co 'commit'
+#git config unset --global user.signingkey 2> /dev/null \
+#    || git config --global --unset user.signingkey
+#git config unset --global commit.gpgsign 2> /dev/null \
+#    || git config --global --unset commit.gpgsign
+#git config unset --global tag.gpgsign 2> /dev/null \
+#    || git config --global --unset tag.gpgsign
+
+rm -rf "${HOME}/.vim"
+rm -rf "${HOME}/bin"
+rm -rf "${HOME}/lib"
+ln -sf "${DOTFILES_PATH}/macosx/files/.vim" "${HOME}/.vim"
+ln -sf "${DOTFILES_PATH}/macosx/files/bin" "${HOME}/bin"
+ln -sf "${DOTFILES_PATH}/macosx/files/lib" "${HOME}/lib"
+
+pushd "${DOTFILES_PATH}" > /dev/null
+git submodule update --recursive --init
+popd > /dev/null
