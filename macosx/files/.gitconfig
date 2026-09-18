@@ -1,7 +1,7 @@
 [user]
     name = Manny Jois
     email = 3893724+mkjois@users.noreply.github.com
-    signingkey = 99146C1392C62977
+    #signingkey = 99146C1392C62977
 [core]
     excludesfile = ~/.gitignore
     commentChar = ";"
@@ -11,9 +11,9 @@
     default = simple
 [commit]
     template = ~/.gitmessage
-    gpgsign = true
+    #gpgsign = true
 [tag]
-    gpgsign = true
+    #gpgsign = true
 [grep]
     patternType = extended
     lineNumber = true
@@ -25,7 +25,8 @@
     c = checkout
     ca = co --amend --no-edit .
     cb = checkout -b
-    co = !gpg --sign -u ${EMAIL} -o /dev/null ~/.gitmessage && git commit
+    #co = !gpg --sign -u ${EMAIL} -o /dev/null ~/.gitmessage && git commit
+    co = commit
     d = diff
     p = !git pull origin $(git rev-parse --abbrev-ref HEAD)
     pu = !git push -u origin $(git rev-parse --abbrev-ref HEAD)

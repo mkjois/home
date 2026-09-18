@@ -139,12 +139,11 @@ fi
 set_prompt() {
     _last="$(printf '%03d' $?)"
     _time_cmd_end="$(date +%s)"
-    _diff="$((${_time_cmd_end} - ${_time_cmd_start}))"
-    [[ ${_num_hook_runs} < 2 ]] && _diff=0
-    _num_hook_runs=0
+    _time_cmd_diff="$((${_time_cmd_end} - ${_time_cmd_start}))"
+
     PS1=''
     [[ ${_last} == "000" ]] && PS1+="\[$NGreen\]" || PS1+="\[$NRed\]"
-    PS1+="${_last} \[$NCyan\]${_diff}s "
+    PS1+="${_last} \[$NCyan\]${_time_cmd_diff}s "
     [[ ${EUID} == 0 ]] && PS1+="\[$BRed\]" || PS1+="\[$BGreen\]"
     _branch="$(__git_ps1 "[%s]" || echo '')"
     PS1+="\u\[$NYellow\]@${HOSTNAME%%.*} \[$BPurple\]$_branch\[$BBlue\]\w\n"
@@ -152,14 +151,14 @@ set_prompt() {
     PS1+="\$ \[$BBlack\]"
     [[ ${EUID} == 0 ]] && PS2="\[$BRed\]> \[$BBlack\]" || PS2="\[$BGreen\]> \[$BBlack\]"
     [[ ${EUID} == 0 ]] && PS4="\[$BRed\]+ \[$BBlack\]" || PS4="\[$BGreen\]+ \[$BBlack\]"
+
+    _time_cmd_diff=0
 }
 PROMPT_COMMAND='set_prompt'
 
 # Start timer and reset color after command is entered.
-_num_hook_runs=0
 run_hook() {
-    [[ ${_num_hook_runs} == 0 ]] && _time_cmd_start="$(date +%s)"
-    _num_hook_runs="$((1 + ${_num_hook_runs}))"
+    _time_cmd_start="$(date +%s)"
     echo -ne "$Reset"
 }
 trap 'run_hook' DEBUG
