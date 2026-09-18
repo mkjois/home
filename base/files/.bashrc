@@ -47,7 +47,6 @@ export EMAIL="m.k.jois@gmail.com"
 export CLICOLOR=1
 
 export PATH="${PATH/\/usr\/sbin//usr/local/sbin:/usr/sbin}"
-export GOPATH="${HOME}/src/go"
 
 default_java_version=25
 default_git_fetch_depth=5
@@ -58,6 +57,25 @@ if test -d /opt/homebrew/bin ; then
     if test -d "${brew_prefix}/bin" ; then
         export PATH="${brew_prefix}/bin:${brew_prefix}/sbin:${PATH}"
     fi
+fi
+
+# Java toolchain
+if /usr/libexec/java_home -v ${default_java_version} > /dev/null 2> /dev/null; then
+    export JAVA_HOME="$(/usr/libexec/java_home -v ${default_java_version})"
+fi
+
+# Go toolchain
+export GOPATH="${HOME}/src/go"
+export GOTOOLCHAIN="${GOTOOLCHAIN:-auto}"
+
+# Rust toolchain
+if test -e "${HOME}/.cargo/env"; then
+    source "${HOME}/.cargo/env"
+fi
+
+# Orbstack setup
+if test -e "${HOME}/.orbstack/shell/init.bash"; then
+    source "${HOME}/.orbstack/shell/init.bash" 2> /dev/null
 fi
 
 # Random programs that decide to install to `~/.local/`
@@ -84,24 +102,9 @@ if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
     export PATH="${path}:${PATH}"
 fi
 
-# Java toolchain
-if /usr/libexec/java_home -v ${default_java_version} > /dev/null 2> /dev/null; then
-    export JAVA_HOME="$(/usr/libexec/java_home -v ${default_java_version})"
-fi
-
-# Rust toolchain
-if test -e "${HOME}/.cargo/env"; then
-    source "${HOME}/.cargo/env"
-fi
-
-# Orbstack setup
-if test -e "${HOME}/.orbstack/shell/init.bash"; then
-    source "${HOME}/.orbstack/shell/init.bash" 2> /dev/null
-fi
-
 # Git prompt
-if which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh")" > /dev/null 2> /dev/null ; then
-    git_prompt_path="$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh")"
+if which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh" 2> /dev/null)" > /dev/null 2> /dev/null ; then
+    git_prompt_path="$(realpath "$(which git)/../../etc/bash_completion.d/git-prompt.sh" 2> /dev/null)"
     export SSH_TAKE_FILES+=" ${git_prompt_path}"
 elif test -e "${HOME}/lib/git-prompt.sh"; then
     source "${HOME}/lib/git-prompt.sh"
@@ -109,8 +112,8 @@ elif test -e "${HOME}/lib/git-prompt.sh"; then
 fi
 
 # Git completion
-if which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../../etc/bash_completion.d/git-completion.bash")" > /dev/null 2> /dev/null ; then
-    git_completion_path="$(realpath "$(which git)/../../etc/bash_completion.d/git-completion.bash")"
+if which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../../etc/bash_completion.d/git-completion.bash" 2> /dev/null)" > /dev/null 2> /dev/null ; then
+    git_completion_path="$(realpath "$(which git)/../../etc/bash_completion.d/git-completion.bash" 2> /dev/null)"
     export SSH_TAKE_FILES+=" ${git_completion_path}"
 elif test -e "${HOME}/lib/git-completion.bash"; then
     source "${HOME}/lib/git-completion.bash"
@@ -138,6 +141,11 @@ fi
 # Orbstack completion
 if which orbctl  > /dev/null 2> /dev/null && ! complete -p orbctl  > /dev/null 2> /dev/null ; then
     source <(orbctl completion bash)
+fi
+
+# Podman completion
+if which podman  > /dev/null 2> /dev/null && ! complete -p podman  > /dev/null 2> /dev/null ; then
+    source <(podman completion bash)
 fi
 
 # Start a GPG agent for forwarding.
@@ -195,22 +203,22 @@ export HISTIGNORE='d:g:l:la:ll:lr:ls:bg:fg:jobs:clear:reset:exit:history'
 set -a
 
 cg() {
-    repo="${1:-NONE}"
-    matching_dirs="$(find "${GOPATH}/src" -type d -maxdepth 4 -name '\.git' | grep -E "/${repo}[^/]*/\.git\$")"
+    local repo="${1:-NONE}"
+    local matching_dirs="$(find "${GOPATH}/src" -type d -maxdepth 4 -name '\.git' | grep -E "/${repo}[^/]*/\.git\$")"
     if echo -e "${matching_dirs}" | grep -qE '^$'; then
         echo -e "\nNo repos found: ${repo}*\n" >&2
         return 1
     elif test "$(echo -e "${matching_dirs}" | wc -l | awk '{print $1}')" -eq 1; then
         cd "$(dirname "${matching_dirs}")"
     else
-        prefix_to_remove="$(echo "${GOPATH}/src/" | sed 's/\//\\\//g')"
+        local prefix_to_remove="$(echo "${GOPATH}/src/" | sed 's/\//\\\//g')"
         echo -e "\nAmbiguous:\n$(echo -e "${matching_dirs}" | sed 's/\/\.git$//' | sed "s/^${prefix_to_remove}/ - /")\n" >&2
         return 1
     fi
 }
 
 colors() {
-    str="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+=()[]{}|'\":;,./?"
+    local str="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+=()[]{}|'\":;,./?"
     for i in $(seq 0 7); do
         echo "$(tput dim )$(tput setaf $i)${str}$(tput sgr0)"
         echo "$(tput setaf $i)${str}$(tput sgr0)"
@@ -225,35 +233,35 @@ dive() {
 }
 
 draw() {
-    encoded="$(cat "$1" | python3 -c 'import sys; import urllib.parse; print(urllib.parse.quote(sys.stdin.read()))')"
-    link="https://TODO-mermaid-host/generate?data=${encoded}"
+    local encoded="$(cat "$1" | python3 -c 'import sys; import urllib.parse; print(urllib.parse.quote(sys.stdin.read()))')"
+    local link="https://TODO-mermaid-host/generate?data=${encoded}"
     echo "${link}"
     open "${link}"
 }
 
 fetch() {
-    branch="${1:-master}"
-    depth="${2:-${default_git_fetch_depth}}"
+    local branch="${1:-master}"
+    local depth="${2:-${default_git_fetch_depth}}"
     git fetch --depth "${depth}" origin "${branch}"
     git checkout -b "${branch}" FETCH_HEAD
     git branch --set-upstream-to "origin/${branch}"
 }
 
 ggb() {
-    arg="$1"
+    local arg="$1"
     shift
     git grep -w "${arg}" "$@"
 }
 
 gitup() {
-    branch="${1:-master}"
+    local branch="${1:-master}"
     git c "${branch}"
     git p
     git bd "$(git rev-parse --abbrev-ref @{-1})"
 }
 
 jv() {
-    version="${1:-${default_java_version}}"
+    local version="${1:-${default_java_version}}"
     export JAVA_HOME="$(/usr/libexec/java_home -v "$(test "${version}" -lt 9 && echo "1.${version}" || echo "${version}")")"
 }
 
@@ -266,19 +274,19 @@ newpr() {
 }
 
 nsb() {
-    name="${1:-asdf.sh}"
+    local name="${1:-asdf.sh}"
     cp ~/lib/script-template-bash.sh "${name}"
     chmod +x "${name}"
 }
 
 nsp() {
-    name="${1:-asdf.py}"
+    local name="${1:-asdf.py}"
     cp ~/lib/script-template-python.py "${name}"
     chmod +x "${name}"
 }
 
 packer() {
-    pkversion="${PK_VERSION:-1.16.1}"
+    local pkversion="${PK_VERSION:-1.16.1}"
     docker run --rm -it \
         -v ${HOME}/.aws:/root/.aws:ro \
         -v ${HOME}/.config/packer:/root/.config/packer \
@@ -296,20 +304,20 @@ pssh() {
 }
 
 serve() {
-    path="${1:-.}"
-    port="${2:-8080}"
+    local path="${1:-.}"
+    local port="${2:-8080}"
     python3 -m http.server -d "${path}" -b 0.0.0.0 "${port}"
 }
 
 servegt() {
-    path="${1:-.}"
+    local path="${1:-.}"
     set="${2:-test}"
-    port="${3:-8080}"
+    local port="${3:-8080}"
     python3 -m http.server -d "${path}/build/reports/tests/${set}/" -b 0.0.0.0 "${port}"
 }
 
 terraform() {
-    tfversion="${TF_VERSION:-1.16.3}"
+    local tfversion="${TF_VERSION:-1.16.3}"
     docker run --rm -i \
         -v ${HOME}/.aws:/root/.aws:ro \
         -v ${HOME}/.ssh:/root/.ssh:ro \

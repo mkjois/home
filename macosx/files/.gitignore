@@ -2,7 +2,7 @@
 .ssh/config
 
 # AI
-.claude
+.claude/settings.local.json
 
 # IntelliJ
 .idea
@@ -29,6 +29,18 @@ local
 mj[-_]dev
 tmp
 TODO
+working
+
+# Plaintext secrets and GPG-encrypted files
+**.private
+private.**
+private
+**.secret
+secret.**
+secret
+**.gpg
+gpg.**
+gpg
 
 # Python caches and Vim swap files
 **.py[a-z]
