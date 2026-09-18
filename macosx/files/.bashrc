@@ -2,6 +2,7 @@ test -e ~/.basebashrc && source ~/.basebashrc
 test -e ~/.workbashrc && source ~/.workbashrc
 
 export SSH_TAKE_FILES+=" ${HOME}/.bashrc"
+export SSH_TAKE_FILES+=" ${HOME}/.ideavimrc"
 export SSH_TAKE_FILES+=" ${HOME}/.gitignore"
 export SSH_TAKE_FILES+=" ${HOME}/.gitmessage"
 export SSH_TAKE_FILES+=" ${HOME}/.gitconfig"

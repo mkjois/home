@@ -44,8 +44,10 @@ BWhite="$(tput bold)$(tput setaf 7)"
 
 export NAME="Manny Jois"
 export EMAIL="m.k.jois@gmail.com"
+export EMAIL_FOR_GITHUB="3893724+mkjois@users.noreply.github.com"
 export CLICOLOR=1
 
+# The all-important PATH construction begins here.
 export PATH="${PATH/\/usr\/sbin//usr/local/sbin:/usr/sbin}"
 
 default_java_version=25
@@ -355,7 +357,7 @@ set +a
 
 alias g="echo -e '\n===== BRANCHES =====\n' && git branch && echo -e '\n===== LATEST =====\n' && git --no-pager log -n 2 && echo -e '\n===== STATUS =====\n' && git status -sb && echo"
 alias gd='git diff'
-alias gp='gpg --sign -u "${EMAIL}" -o /dev/null ~/.gitmessage'
+alias gp='gpg --sign -u "${EMAIL_FOR_GITHUB}" -o /dev/null ~/.gitmessage'
 alias rgl='rm -rfv ~/.go'
 alias rml='rm -rfv ~/.m2'
 
