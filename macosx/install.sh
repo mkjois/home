@@ -25,6 +25,11 @@ trap on_exit EXIT
 
 DOTFILES_PATH="$(realpath "$(dirname "$0")/..")"
 
+mkdir -p "${HOME}/.config/ai" "${HOME}/.codex" "${HOME}/.claude"
+ln -sfn "${DOTFILES_PATH}/base/files/AGENTS.ref.md" "${HOME}/.config/ai/AGENTS.md"
+ln -sfn "${DOTFILES_PATH}/base/files/CLAUDE.ref.md" "${HOME}/.claude/CLAUDE.md"
+ln -sfn "${HOME}/.config/ai/AGENTS.md"              "${HOME}/.codex/AGENTS.md"
+
 ln -sf "${DOTFILES_PATH}/macosx/files/.basebashrc"   "${HOME}/.basebashrc"
 ln -sf "${DOTFILES_PATH}/macosx/files/.bashrc"       "${HOME}/.bashrc"
 ln -sf "${DOTFILES_PATH}/macosx/files/.bash_profile" "${HOME}/.bash_profile"
