@@ -110,7 +110,6 @@ if which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../..
     export SSH_TAKE_FILES+=" ${git_prompt_path}"
 elif test -e "${HOME}/lib/git-prompt.sh"; then
     source "${HOME}/lib/git-prompt.sh"
-    export SSH_TAKE_FILES+=" ${HOME}/lib/git-prompt.sh"
 fi
 
 # Git completion
@@ -119,7 +118,6 @@ if which git > /dev/null 2> /dev/null && test -e "$(realpath "$(which git)/../..
     export SSH_TAKE_FILES+=" ${git_completion_path}"
 elif test -e "${HOME}/lib/git-completion.bash"; then
     source "${HOME}/lib/git-completion.bash"
-    export SSH_TAKE_FILES+=" ${HOME}/lib/git-completion.bash"
 fi
 
 # Load all autocompletions

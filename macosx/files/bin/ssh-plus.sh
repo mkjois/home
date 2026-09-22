@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# Standard bash preamble.
+#
 set -ETeuo pipefail
-err_exit() { echo -e "$2" >&2; exit $1; }
-on_exit() { exit_code=$?; if test ${exit_code} -ne 0; then echo -e '\nFailed' >&2; fi; }
+err_echo() { echo -e "$1" >&2; }
+err_exit() { err_echo "$2"; exit $1; }
+on_exit() { exit_code=$?; if test ${exit_code} -ne 0; then err_echo '\nFailed'; fi; }
 trap on_exit EXIT
+
 
 ########################################################################
 ##                                                                    ##
@@ -26,11 +30,11 @@ trap on_exit EXIT
 
 rm -rf /tmp/.ssh
 mkdir -p /tmp/.ssh
-cp "${HOME}/.ssh/id_rsa.pub" /tmp/.ssh/authorized_keys
-#cat .ssh/id_rsa.pub | grep -E "^$(cat ~/.ssh/id_rsa.pub | sed -r -e 's/(\+|\.)/\\\1/g')\$"
+cp "${HOME}/.ssh/id_ed25519.pub" /tmp/.ssh/authorized_keys
 
-if ! ssh-add -l | awk '{print $3}' | grep -qE "^${HOME}/\\.ssh/id_rsa\$" ; then
-    ssh-add -t 86400 "${HOME}/.ssh/id_rsa"
+if ! ssh-add -l | awk '{print $3}' | grep -qE "^${HOME}/\\.ssh/id_ed25519\$" && ! ssh-add -l | awk '{print $4}' | grep -qE "^\(ED25519\)\$" ; then
+    err_echo "Adding SSH pubkey to agent..."
+    ssh-add -t 86400 "${HOME}/.ssh/id_ed25519"
 fi
 
 gpg -a --export > "${HOME}/.ssh/pubring.gpg.txt"
@@ -39,8 +43,7 @@ local_command="rsync -aLKzv \
     -e 'ssh -S none' \
     ${SSH_TAKE_FILES} \
     ${HOME}/.ssh/pubring.gpg.txt \
-    %n:~/"
-#-t mjois-jupyter 'echo FINAL; exec $SHELL -l'
+    %r@%n:~/"
 
 exec ssh \
     -t \
@@ -49,6 +52,7 @@ exec ssh \
     "$@"
 
 exit
+
 
 ########################################################################
 ##                                                                    ##
@@ -59,6 +63,8 @@ exit
 ##                                                                    ##
 ## If password seems required and it's unclear why,                   ##
 ## try deleting the ControlMaster socket if you have that configured. ##
+##                                                                    ##
+## TODO: this wasn't working as intended last time I tested...        ##
 ##                                                                    ##
 ########################################################################
 

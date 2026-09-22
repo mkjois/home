@@ -20,7 +20,8 @@
 - Never mutate an external resource without my explicit permission. Inspection and other
   read-only operations are allowed.
 - Mutations include HTTP `POST`, `PUT`, `PATCH`, and `DELETE` requests; SQL `INSERT`, `UPDATE`,
-  `DELETE`, `MERGE`, `GRANT`, `REVOKE`, and DDL statements; and infrastructure or configuration
+  `DELETE`, `MERGE`, `GRANT`, `REVOKE`, and DDL statements; AWS API or CLI actions other than
+  read-only operations such as `Get`, `List`, and `Describe`; and infrastructure or configuration
   commands such as Terraform `apply`, Salt state application, Ansible playbook execution, Packer
   builds, Kubernetes `apply`, Helm upgrades, deployments, restarts, and equivalent operations.
 - Do not infer permission to mutate from a request to investigate, diagnose, review, or plan.
