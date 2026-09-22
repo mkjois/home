@@ -43,6 +43,10 @@ ln -sf "${DOTFILES_PATH}/macosx/files/.gitignore"  "${HOME}/.gitignore"
 ln -sf "${DOTFILES_PATH}/macosx/files/.gitmessage" "${HOME}/.gitmessage"
 cp -f  "${DOTFILES_PATH}/macosx/files/.gitconfig"  "${HOME}/"
 
+mkdir -p "${HOME}/.ssh/config.d"
+mkdir -p "${HOME}/.ssh/sockets"
+ln -sf "${DOTFILES_PATH}/base/files/.ssh/config" "${HOME}/.ssh/config"
+
 #git config set --global user.email "${EMAIL:-"3893724+mkjois@users.noreply.github.com"}" 2> /dev/null \
 #    || git config --global user.email "${EMAIL:-"3893724+mkjois@users.noreply.github.com"}"
 #git config set --global alias.co 'commit' 2> /dev/null \

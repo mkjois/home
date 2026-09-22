@@ -1,1 +1,5 @@
 *.gpg*
+*.pem*
+authorized_keys*
+known_hosts*
+id_*
