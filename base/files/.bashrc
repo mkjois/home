@@ -86,6 +86,12 @@ if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
     export PATH="${path}:${PATH}"
 fi
 
+# Docker programs
+path="${HOME}/.docker/bin"
+if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
+    export PATH="${path}:${PATH}"
+fi
+
 # Rust programs
 path="${HOME}/.cargo/bin"
 if [[ ! ( ${PATH} =~ (^|:)${path}(:|$) ) ]]; then
@@ -365,8 +371,9 @@ alias upcask2="brew upgrade --cask \$(brew list --cask -1 --full-name | sort | t
 alias upcask3="casks=\"\$(brew outdated --cask --greedy --quiet | sort | tr '\n' ' ')\"; brew uninstall --cask \${casks} ; brew install --cask \${casks}"
 
 # Docker convenience
-alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | head -n 1 && docker image ls | grep -vE '^REPOSITORY ' | grep -vE '^registry\\.k8s\\.io\\/' | grep -vE '^docker\/' | LC_COLLATE=C sort -k 1 && echo"
-alias dup="docker image ls | grep -vE '^REPOSITORY ' | grep -vE '^registry\\.k8s\\.io\\/' | grep -vE '^docker\/' | LC_COLLATE=C sort -k 1 | grep ' latest ' | awk '{print \$1}' | xargs -L 1 docker image pull"
+alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====' && docker image ls && echo"
+#alias d="echo -e '\n===== CONTAINERS =====\n' && docker container ls -a && echo -e '\n===== IMAGES =====\n' && docker image ls | head -n 1 && docker image ls | grep -vE '^IMAGE ' | grep -vE '^registry\\.k8s\\.io\\/' | grep -vE '^docker\/' | LC_COLLATE=C sort -k 1 && echo"
+alias dup="docker image ls | grep -vE '^IMAGE ' | grep -vE '^registry\\.k8s\\.io\\/' | grep -vE '^docker\/' | LC_COLLATE=C sort -k 1 | grep ' latest ' | awk '{print \$1}' | xargs -L 1 docker image pull"
 alias dr='docker run --rm -it -w /src -v "$(pwd):/src"'
 alias dcat='docker run --rm -i -w /src -v "$(pwd):/src"'
 alias dgc='docker system prune --volumes && docker volume ls -q -f dangling=true | xargs docker volume rm'

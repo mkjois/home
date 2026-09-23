@@ -25,7 +25,7 @@
     c = checkout
     ca = co --amend --no-edit .
     cb = checkout -b
-    #co = !gpg --sign -u ${EMAIL_FOR_GITHUB} -o /dev/null ~/.gitmessage && git commit
+    #co = !gpg --sign -u "${EMAIL_FOR_GITHUB}" -o /dev/null ~/.gitmessage && git commit
     co = commit
     d = diff
     p = !git pull origin $(git rev-parse --abbrev-ref HEAD)
@@ -41,3 +41,5 @@
     required = true
     clean = git-lfs clean -- %f
     smudge = git-lfs smudge -- %f
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
