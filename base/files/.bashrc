@@ -386,7 +386,7 @@ alias vsk='mkdir -p ~/tmp && v ~/tmp/skratch.txt'
 
 # SSH convenience
 alias sshp='ssh-plus.sh'
-alias sgc='rm -fv ~/.ssh/sockets/*'
+alias sgc='rm -fv ~/.ssh/s/*'
 
 # Commands with color
 alias grep=' grep  --color=auto'
