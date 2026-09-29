@@ -1,0 +1,37 @@
+[
+    {
+        "key": "g /",
+        "command": "workbench.action.quickOpen",
+        "when": "!editorTextFocus && !inputFocus && !terminalFocus"
+    },
+    {
+        "key": "g p",
+        "command": "workbench.action.showCommands",
+        "when": "!editorTextFocus && !inputFocus && !terminalFocus"
+    },
+    {
+        "key": "g f",
+        "command": "workbench.files.action.focusFilesExplorer",
+        "when": "!editorTextFocus && !inputFocus && !terminalFocus"
+    },
+    {
+        "key": "g e",
+        "command": "workbench.extensions.action.focusExtensionsView",
+        "when": "!editorTextFocus && !inputFocus && !terminalFocus"
+    },
+    {
+        "key": "g d",
+        "command": "github.cweijan.mysql.focus",
+        "when": "!editorTextFocus && !inputFocus && !terminalFocus"
+    },
+    {
+        "key": "g space",
+        "command": "workbench.action.togglePanel",
+        "when": "!editorTextFocus && !inputFocus && !terminalFocus"
+    },
+    {
+        "key": "g i",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when": "!editorTextFocus && !inputFocus && !terminalFocus"
+    }
+]

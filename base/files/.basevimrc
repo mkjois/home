@@ -35,6 +35,8 @@ noremap <Return> <C-Z>
 noremap <Space> :w<Return>
 noremap ( gT
 noremap ) gt
+nnoremap gt <Nop>
+nnoremap gT <Nop>
 noremap [ {
 noremap ] }
 noremap { <C-B>

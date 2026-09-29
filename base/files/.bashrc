@@ -154,6 +154,28 @@ if which podman  > /dev/null 2> /dev/null && ! complete -p podman  > /dev/null 2
     source <(podman completion bash)
 fi
 
+# Docker Desktop can prepend a PATH block to the symlinked profile. Remove only
+# that exact block at the start of ~/.bash_profile, preserving the symlink.
+if [[ ${OSTYPE} == darwin* && -f ${HOME}/.bash_profile ]]; then
+    if IFS= read -r docker_profile_first_line < "${HOME}/.bash_profile" &&
+        [[ ${docker_profile_first_line} == '# The following lines were added by Docker Desktop to add commands to your PATH.' ]]; then
+        python3 - "${HOME}/.bash_profile" <<'PY'
+import sys
+
+start = b'# The following lines were added by Docker Desktop to add commands to your PATH.\n'
+end = b'# End of Docker Desktop section.\n\n'
+with open(sys.argv[1], 'r+b') as profile:
+    content = profile.read()
+    if content.startswith(start):
+        end_at = content.find(end, len(start), 4096)
+        if end_at >= 0:
+            profile.seek(0)
+            profile.write(content[end_at + len(end):])
+            profile.truncate()
+PY
+    fi
+fi
+
 # Start a GPG agent for forwarding.
 if which gpg > /dev/null 2> /dev/null ; then
     true
@@ -364,6 +386,7 @@ alias gd='git diff'
 alias gp='gpg --sign -u "${EMAIL_FOR_GITHUB}" -o /dev/null ~/.gitmessage'
 alias rgl='rm -rfv ~/.go'
 alias rml='rm -rfv ~/.m2'
+alias sb='source ~/.bashrc'
 
 # Brew convenience
 alias upcask="brew outdated --cask --greedy --quiet | sort"
@@ -383,6 +406,7 @@ alias dsock="sudo ln -sf \$(docker context ls | grep -E '^[a-zA-Z0-9_-]+ \\*' | 
 alias v='vim -p'
 alias vimup='for d in $(find ~/.vim/bundle -type d -depth 1); do pushd $d > /dev/null && git p && popd > /dev/null; done'
 alias vsk='mkdir -p ~/tmp && v ~/tmp/skratch.txt'
+alias csk='cat ~/tmp/skratch.txt'
 
 # SSH convenience
 alias sshp='ssh-plus.sh'

@@ -14,6 +14,10 @@
   `git diff`.
 - Do not run `git add`, `git commit`, `git tag`, or other commands that modify the Git index,
   history, or refs unless I explicitly request that exact operation.
+- That includes `git fetch` (with or without `--tags`), `git pull`, `git checkout -b`, `git switch`
+  and `git branch <name>`: fetching updates remote-tracking refs and tags, and switching changes
+  what `HEAD` points at. Work on the current branch. For a read-only look at the remote, use
+  `git ls-remote` or `gh api`, which change no local refs.
 
 ## External resources are read-only by default
 

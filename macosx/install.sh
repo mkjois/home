@@ -39,6 +39,11 @@ ln -sf "${DOTFILES_PATH}/macosx/files/.basevimrc" "${HOME}/.basevimrc"
 ln -sf "${DOTFILES_PATH}/macosx/files/.ideavimrc" "${HOME}/.ideavimrc"
 ln -sf "${DOTFILES_PATH}/macosx/files/.vimrc"     "${HOME}/.vimrc"
 
+mkdir -p "${HOME}/Library/Application Support/Code/User"
+ln -sf "${DOTFILES_PATH}/macosx/files/vscode/settings-user.json"    "${HOME}/Library/Application Support/Code/User/settings.json"
+ln -sf "${DOTFILES_PATH}/macosx/files/vscode/keybindings-user.json" "${HOME}/Library/Application Support/Code/User/keybindings.json"
+defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+
 ln -sf "${DOTFILES_PATH}/macosx/files/.gitignore"  "${HOME}/.gitignore"
 ln -sf "${DOTFILES_PATH}/macosx/files/.gitmessage" "${HOME}/.gitmessage"
 cp -f  "${DOTFILES_PATH}/macosx/files/.gitconfig"  "${HOME}/"

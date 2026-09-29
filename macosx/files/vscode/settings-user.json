@@ -1,0 +1,456 @@
+{
+    "terminal.integrated.profiles.osx": {
+        "bash": {
+            "path": "/opt/homebrew/bin/bash",
+            "args": [
+                "-l"
+            ]
+        },
+        "zsh": {
+            "path": "zsh",
+            "args": [
+                "-l"
+            ]
+        },
+        "fish": {
+            "path": "fish",
+            "args": [
+                "-l"
+            ]
+        },
+        "tmux": {
+            "path": "tmux",
+            "icon": "terminal-tmux"
+        },
+        "pwsh": {
+            "path": "pwsh",
+            "icon": "terminal-powershell"
+        }
+    },
+    "terminal.integrated.defaultProfile.osx": "bash",
+    "editor.lineNumbers": "on",
+    "editor.wordWrap": "off",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+    "editor.autoIndent": "full",
+    "workbench.editor.openSideBySideDirection": "right",
+    "[go]": {
+        "editor.insertSpaces": false
+    },
+    "[html]": {
+        "editor.insertSpaces": false
+    },
+    "[makefile]": {
+        "editor.insertSpaces": false
+    },
+    "[json]": {
+        "editor.tabSize": 2
+    },
+    "[jsonc]": {
+        "editor.tabSize": 2
+    },
+    "vim.leader": ",",
+    "vim.surround": true,
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "g",
+                "/"
+            ],
+            "commands": [
+                "workbench.action.quickOpen"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "p"
+            ],
+            "commands": [
+                "workbench.action.showCommands"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "f"
+            ],
+            "commands": [
+                "workbench.files.action.focusFilesExplorer"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "e"
+            ],
+            "commands": [
+                "workbench.extensions.action.focusExtensionsView"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "d"
+            ],
+            "commands": [
+                "github.cweijan.mysql.focus"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "<Space>"
+            ],
+            "commands": [
+                "workbench.action.togglePanel"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "l"
+            ],
+            "commands": [
+                "editor.action.goToImplementation"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "h"
+            ],
+            "commands": [
+                "editor.action.goToReferences"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "r"
+            ],
+            "commands": [
+                "testing.runAtCursor"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "x"
+            ],
+            "commands": [
+                "testing.debugAtCursor"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "t"
+            ],
+            "commands": [
+                "testing.runCurrentFile"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "T"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Up>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Down>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Left>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Right>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Insert>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Del>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<BS>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "h"
+            ],
+            "after": [
+                "<C-w>",
+                "h"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "l"
+            ],
+            "after": [
+                "<C-w>",
+                "l"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "j"
+            ],
+            "after": [
+                "<C-w>",
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "k"
+            ],
+            "after": [
+                "<C-w>",
+                "k"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "r"
+            ],
+            "after": [
+                "<C-r>"
+            ]
+        },
+        {
+            "before": [
+                "<Space>"
+            ],
+            "commands": [
+                "workbench.action.files.save"
+            ]
+        },
+        {
+            "before": [
+                "("
+            ],
+            "commands": [
+                "workbench.action.previousEditor"
+            ]
+        },
+        {
+            "before": [
+                ")"
+            ],
+            "commands": [
+                "workbench.action.nextEditor"
+            ]
+        },
+        {
+            "before": [
+                "["
+            ],
+            "after": [
+                "{"
+            ]
+        },
+        {
+            "before": [
+                "]"
+            ],
+            "after": [
+                "}"
+            ]
+        },
+        {
+            "before": [
+                "{"
+            ],
+            "after": [
+                "<C-b>"
+            ]
+        },
+        {
+            "before": [
+                "}"
+            ],
+            "after": [
+                "<C-f>"
+            ]
+        },
+        {
+            "before": [
+                "K"
+            ],
+            "after": [
+                "k",
+                "J"
+            ]
+        },
+        {
+            "before": [
+                "X"
+            ],
+            "after": [
+                "^",
+                "D"
+            ]
+        },
+        {
+            "before": [
+                "Y"
+            ],
+            "after": [
+                "y",
+                "$"
+            ]
+        },
+        {
+            "before": [
+                "V"
+            ],
+            "after": [
+                "v",
+                "$"
+            ]
+        },
+        {
+            "before": [
+                "'"
+            ],
+            "after": [
+                "`"
+            ]
+        },
+        {
+            "before": [
+                "`"
+            ],
+            "after": [
+                "'"
+            ]
+        }
+    ],
+    "vim.insertModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "<Up>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Down>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Left>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Right>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Insert>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "<Esc>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "d",
+                "f"
+            ],
+            "after": [
+                "<Esc>"
+            ]
+        }
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "<Esc>"
+            ],
+            "after": [
+                "<Nop>"
+            ]
+        },
+        {
+            "before": [
+                "d",
+                "f"
+            ],
+            "after": [
+                "<Esc>"
+            ]
+        }
+    ]
+}
