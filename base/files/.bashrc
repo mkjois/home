@@ -192,7 +192,7 @@ fi
 set_prompt() {
     _last="$(printf '%03d' $?)"
     _time_cmd_end="$(date +%s)"
-    _time_cmd_diff="$((${_time_cmd_end} - ${_time_cmd_start}))"
+    _time_cmd_diff="$((${_time_cmd_end} - ${_time_cmd_start_1}))"
 
     PS1=''
     [[ ${_last} == "000" ]] && PS1+="\[$NGreen\]" || PS1+="\[$NRed\]"
@@ -211,7 +211,8 @@ PROMPT_COMMAND='set_prompt'
 
 # Start timer and reset color after command is entered.
 run_hook() {
-    _time_cmd_start="$(date +%s)"
+    _time_cmd_start_1="${_time_cmd_start_2:-0}"
+    _time_cmd_start_2="$(date +%s)"
     echo -ne "$Reset"
 }
 trap 'run_hook' DEBUG

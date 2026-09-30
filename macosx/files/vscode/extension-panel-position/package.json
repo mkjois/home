@@ -1,0 +1,22 @@
+{
+    "name": "mkjois-home-panel-position",
+    "displayName": "mkjois/home Panel Position",
+    "description": "Toggle the VS Code panel between the right and bottom positions.",
+    "version": "0.0.1",
+    "publisher": "mkjois",
+    "engines": {
+        "vscode": "^1.90.0"
+    },
+    "main": "./extension.js",
+    "activationEvents": [
+        "onCommand:mkjois/home/panel-position/toggle"
+    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "mkjois/home/panel-position/toggle",
+                "title": "Toggle Panel Position (Right/Bottom)"
+            }
+        ]
+    }
+}

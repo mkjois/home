@@ -26,6 +26,11 @@
     },
     {
         "key": "g space",
+        "command": "mkjois/home/panel-position/toggle",
+        "when": "!editorTextFocus && !inputFocus && !terminalFocus"
+    },
+    {
+        "key": "g ;",
         "command": "workbench.action.togglePanel",
         "when": "!editorTextFocus && !inputFocus && !terminalFocus"
     },

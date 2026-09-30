@@ -104,6 +104,15 @@
                 "<Space>"
             ],
             "commands": [
+                "mkjois/home/panel-position/toggle"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                ";"
+            ],
+            "commands": [
                 "workbench.action.togglePanel"
             ]
         },

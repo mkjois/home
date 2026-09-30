@@ -42,3 +42,11 @@
 - My default interactive shell is the latest Bash, not the macOS default Zsh.
 - Prefer Bash-compatible commands and examples for portability to remote hosts, which usually
   default to Bash.
+
+## Keep lines readable
+
+- When writing Markdown, plain text, notes, skill files, or agent files, aim to keep lines to a
+  width that is easy to read without wrapping, around 120 characters. Do not force this where it
+  would make the content awkward, such as with long links or tables.
+- Apply the same principle to code, while following the repository or language style guidelines
+  for line length when they exist.
