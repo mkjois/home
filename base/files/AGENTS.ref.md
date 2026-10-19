@@ -37,6 +37,20 @@
 - Treat the work instructions as more specific if they conflict with this file.
 - If it does not exist, continue silently.
 
+## Never run `go install`
+
+- Several agent sessions may work on separate copies of the same repo at once, and `go install`
+  writes every copy's binary to the same shared `$GOBIN` path, so the last build silently wins.
+- To build a binary, use `go build -o <path> <package>` and run it from that path. Put it in the
+  directory you already use for temporary outputs, such as the session's scratchpad directory. If
+  you have none, use a directory from `mktemp -d`, not a fixed path like `/tmp/foo` that another
+  session could also write to. Build it elsewhere only when I ask for it there.
+- `go build ./...` (which only checks that everything compiles), `go run`, and `go test` are fine as
+  they are. Don't run `go build` without `-o` on a single main package, since that writes the
+  binary into the current directory, inside the repo.
+- This also applies to `go install <tool>@<version>`. If a tool is missing, tell me rather than
+  installing it.
+
 ## Default shell
 
 - My default interactive shell is the latest Bash, not the macOS default Zsh.

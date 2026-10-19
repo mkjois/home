@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+# Standard bash preamble.
+#
+set -ETeuo pipefail
+err_echo() { echo -e "$1" >&2; }
+err_exit() { err_echo "$2"; exit $1; }
+on_exit() { exit_code=$?; if test ${exit_code} -ne 0; then err_echo '\nFailed'; fi; }
+trap on_exit EXIT
+
+
+# Shallow-clones a local repo's origin into a fresh, numbered workspace under ~/src/agents/,
+# so several agent sessions can work on the same repo without sharing a working tree.
+#
+#   repo-cp ~/src/github.com/org/repo  ->  ~/src/agents/github.com/org/repo@00 (then @01, @02, ...)
+
+agents_root="${HOME}/src/agents"
+
+if test $# -ne 1; then
+    err_exit 2 "Usage: $(basename "$0") <repo path>"
+fi
+
+# The path must be the top level of a git repo, not a directory inside one.
+repo="$(cd "$1" 2>/dev/null && pwd -P)" || err_exit 1 "Not a directory: '$1'"
+top="$(git -C "${repo}" rev-parse --show-toplevel 2>/dev/null)" || err_exit 1 "Not a git repo: '${repo}'"
+if test "$(cd "${top}" && pwd -P)" != "${repo}"; then
+    err_exit 1 "Not the top level of a git repo: '${repo}' (top level is '${top}')"
+fi
+
+origin="$(git -C "${repo}" remote get-url origin 2>/dev/null)" \
+    || err_exit 1 "Repo '${repo}' has no 'origin' remote"
+
+# Turns git@host:org/repo.git, ssh://git@host:22/org/repo.git and https://host/org/repo.git into
+# host/org/repo.
+rel="${origin%/}"
+rel="${rel%.git}"
+case "${rel}" in
+    *://*)
+        rel="${rel#*://}"
+        rel="${rel#*@}"
+        host="${rel%%/*}"
+        rel="${host%%:*}/${rel#*/}"
+        ;;
+    *:*)
+        rel="${rel#*@}"
+        rel="${rel%%:*}/${rel#*:}"
+        ;;
+    *)
+        err_exit 1 "Can't parse origin URL '${origin}'"
+        ;;
+esac
+if [[ "${rel}" != */*/* || "${rel}" == *..* ]]; then
+    err_exit 1 "Origin URL '${origin}' doesn't map to a host/org/repo path (got '${rel}')"
+fi
+
+parent="${agents_root}/$(dirname "${rel}")"
+name="$(basename "${rel}")"
+mkdir -p "${parent}"
+
+# mkdir is atomic, so concurrent runs can't claim the same suffix.
+n=0
+while true; do
+    dest="${parent}/${name}@$(printf '%02d' "${n}")"
+    mkdir "${dest}" 2>/dev/null && break
+    n=$((n + 1))
+done
+
+err_echo "Cloning ${origin} into ${dest}"
+if ! git clone --single-branch -b master --depth 100 "${origin}" "${dest}"; then
+    rm -rf "${dest}"
+    err_exit 1 "Clone failed; removed '${dest}'"
+fi
+
+echo "${dest}"
