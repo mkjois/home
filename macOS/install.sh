@@ -56,9 +56,9 @@ for panel_position_old_link in "${HOME}/.vscode/extensions/mkjois:home:panel-pos
 done
 ln -sfn "${panel_position_extension}" "${panel_position_link}"
 
-ln -sf "${DOTFILES_PATH}/base/files/.gitignore"  "${HOME}/.gitignore"
-ln -sf "${DOTFILES_PATH}/base/files/.gitmessage" "${HOME}/.gitmessage"
-cp -f  "${DOTFILES_PATH}/base/files/.gitconfig"  "${HOME}/"
+ln -sf "${DOTFILES_PATH}/base/files/git/gitignore"  "${HOME}/.gitignore"
+ln -sf "${DOTFILES_PATH}/base/files/git/gitmessage" "${HOME}/.gitmessage"
+cp -f  "${DOTFILES_PATH}/base/files/git/gitconfig"  "${HOME}/.gitconfig"
 
 mkdir -p "${HOME}/.ssh/config.d"
 mkdir -p "${HOME}/.ssh/s" # sockets (104-char absolute path length limit)
