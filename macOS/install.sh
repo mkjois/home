@@ -30,22 +30,22 @@ ln -sfn "${DOTFILES_PATH}/base/files/AGENTS.ref.md" "${HOME}/.config/ai/AGENTS.m
 ln -sfn "${DOTFILES_PATH}/base/files/CLAUDE.ref.md" "${HOME}/.claude/CLAUDE.md"
 ln -sfn "${HOME}/.config/ai/AGENTS.md"              "${HOME}/.codex/AGENTS.md"
 
-ln -sf "${DOTFILES_PATH}/macosx/files/.basebashrc"   "${HOME}/.basebashrc"
-ln -sf "${DOTFILES_PATH}/macosx/files/.bashrc"       "${HOME}/.bashrc"
-ln -sf "${DOTFILES_PATH}/macosx/files/.bash_profile" "${HOME}/.bash_profile"
-ln -sf "${DOTFILES_PATH}/macosx/files/.profile"      "${HOME}/.profile"
+ln -sf "${DOTFILES_PATH}/macOS/files/.basebashrc"   "${HOME}/.basebashrc"
+ln -sf "${DOTFILES_PATH}/macOS/files/.bashrc"       "${HOME}/.bashrc"
+ln -sf "${DOTFILES_PATH}/macOS/files/.bash_profile" "${HOME}/.bash_profile"
+ln -sf "${DOTFILES_PATH}/macOS/files/.profile"      "${HOME}/.profile"
 
-ln -sf "${DOTFILES_PATH}/macosx/files/.basevimrc" "${HOME}/.basevimrc"
-ln -sf "${DOTFILES_PATH}/macosx/files/.ideavimrc" "${HOME}/.ideavimrc"
-ln -sf "${DOTFILES_PATH}/macosx/files/.vimrc"     "${HOME}/.vimrc"
+ln -sf "${DOTFILES_PATH}/base/files/.basevimrc" "${HOME}/.basevimrc"
+ln -sf "${DOTFILES_PATH}/base/files/.ideavimrc" "${HOME}/.ideavimrc"
+ln -sf "${DOTFILES_PATH}/base/files/.vimrc"     "${HOME}/.vimrc"
 
 mkdir -p "${HOME}/Library/Application Support/Code/User"
-ln -sf  "${DOTFILES_PATH}/macosx/files/vscode/settings-user.json"    "${HOME}/Library/Application Support/Code/User/settings.json"
-ln -sf  "${DOTFILES_PATH}/macosx/files/vscode/keybindings-user.json" "${HOME}/Library/Application Support/Code/User/keybindings.json"
+ln -sf  "${DOTFILES_PATH}/base/files/vscode/settings-user.json"    "${HOME}/Library/Application Support/Code/User/settings.json"
+ln -sf  "${DOTFILES_PATH}/base/files/vscode/keybindings-user.json" "${HOME}/Library/Application Support/Code/User/keybindings.json"
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
 
 mkdir -p "${HOME}/.vscode/extensions"
-panel_position_extension="${DOTFILES_PATH}/macosx/files/vscode/extension-panel-position"
+panel_position_extension="${DOTFILES_PATH}/base/files/vscode/extension-panel-position"
 panel_position_version="$(jq -er '.version' "${panel_position_extension}/package.json")"
 panel_position_link="${HOME}/.vscode/extensions/mkjois:home:panel-position:${panel_position_version}"
 for panel_position_old_link in "${HOME}/.vscode/extensions/mkjois:home:panel-position"*; do
@@ -56,9 +56,9 @@ for panel_position_old_link in "${HOME}/.vscode/extensions/mkjois:home:panel-pos
 done
 ln -sfn "${panel_position_extension}" "${panel_position_link}"
 
-ln -sf "${DOTFILES_PATH}/macosx/files/.gitignore"  "${HOME}/.gitignore"
-ln -sf "${DOTFILES_PATH}/macosx/files/.gitmessage" "${HOME}/.gitmessage"
-cp -f  "${DOTFILES_PATH}/macosx/files/.gitconfig"  "${HOME}/"
+ln -sf "${DOTFILES_PATH}/base/files/.gitignore"  "${HOME}/.gitignore"
+ln -sf "${DOTFILES_PATH}/base/files/.gitmessage" "${HOME}/.gitmessage"
+cp -f  "${DOTFILES_PATH}/base/files/.gitconfig"  "${HOME}/"
 
 mkdir -p "${HOME}/.ssh/config.d"
 mkdir -p "${HOME}/.ssh/s" # sockets (104-char absolute path length limit)
@@ -78,9 +78,9 @@ ln -sf "${DOTFILES_PATH}/base/files/.ssh/config" "${HOME}/.ssh/config"
 rm -rf "${HOME}/.vim"
 rm -rf "${HOME}/bin"
 rm -rf "${HOME}/lib"
-ln -sf "${DOTFILES_PATH}/macosx/files/.vim" "${HOME}/.vim"
-ln -sf "${DOTFILES_PATH}/macosx/files/bin" "${HOME}/bin"
-ln -sf "${DOTFILES_PATH}/macosx/files/lib" "${HOME}/lib"
+ln -sf "${DOTFILES_PATH}/base/files/.vim" "${HOME}/.vim"
+ln -sf "${DOTFILES_PATH}/base/files/bin" "${HOME}/bin"
+ln -sf "${DOTFILES_PATH}/base/files/lib" "${HOME}/lib"
 
 pushd "${DOTFILES_PATH}" > /dev/null
 git submodule update --recursive --init

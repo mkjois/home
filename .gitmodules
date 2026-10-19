@@ -1,43 +1,43 @@
-[submodule "macosx/files/.vim/bundle/CamelCaseMotion"]
-	path = macosx/files/.vim/bundle/CamelCaseMotion
+[submodule "base/files/.vim/bundle/CamelCaseMotion"]
+	path = base/files/.vim/bundle/CamelCaseMotion
 	url = https://github.com/bkad/CamelCaseMotion.git
 
-[submodule "macosx/files/.vim/bundle/Dockerfile.vim"]
-	path = macosx/files/.vim/bundle/Dockerfile.vim
+[submodule "base/files/.vim/bundle/Dockerfile.vim"]
+	path = base/files/.vim/bundle/Dockerfile.vim
 	url = https://github.com/ekalinin/Dockerfile.vim.git
 
-[submodule "macosx/files/.vim/bundle/Vim-Jinja2-Syntax"]
-	path = macosx/files/.vim/bundle/Vim-Jinja2-Syntax
+[submodule "base/files/.vim/bundle/Vim-Jinja2-Syntax"]
+	path = base/files/.vim/bundle/Vim-Jinja2-Syntax
 	url = https://github.com/Glench/Vim-Jinja2-Syntax.git
 
-[submodule "macosx/files/.vim/bundle/supertab"]
-	path = macosx/files/.vim/bundle/supertab
+[submodule "base/files/.vim/bundle/supertab"]
+	path = base/files/.vim/bundle/supertab
 	url = https://github.com/ervandew/supertab.git
 
-[submodule "macosx/files/.vim/bundle/vim-better-whitespace"]
-	path = macosx/files/.vim/bundle/vim-better-whitespace
+[submodule "base/files/.vim/bundle/vim-better-whitespace"]
+	path = base/files/.vim/bundle/vim-better-whitespace
 	url = https://github.com/ntpeters/vim-better-whitespace.git
 
-[submodule "macosx/files/.vim/bundle/vim-commentary"]
-	path = macosx/files/.vim/bundle/vim-commentary
+[submodule "base/files/.vim/bundle/vim-commentary"]
+	path = base/files/.vim/bundle/vim-commentary
 	url = https://github.com/tpope/vim-commentary.git
 
-[submodule "macosx/files/.vim/bundle/vim-gradle"]
-	path = macosx/files/.vim/bundle/vim-gradle
+[submodule "base/files/.vim/bundle/vim-gradle"]
+	path = base/files/.vim/bundle/vim-gradle
 	url = https://github.com/hdiniz/vim-gradle.git
 
-[submodule "macosx/files/.vim/bundle/vim-repeat"]
-	path = macosx/files/.vim/bundle/vim-repeat
+[submodule "base/files/.vim/bundle/vim-repeat"]
+	path = base/files/.vim/bundle/vim-repeat
 	url = https://github.com/tpope/vim-repeat.git
 
-[submodule "macosx/files/.vim/bundle/vim-surround"]
-	path = macosx/files/.vim/bundle/vim-surround
+[submodule "base/files/.vim/bundle/vim-surround"]
+	path = base/files/.vim/bundle/vim-surround
 	url = https://github.com/tpope/vim-surround.git
 
-[submodule "macosx/files/.vim/bundle/vim-terraform"]
-	path = macosx/files/.vim/bundle/vim-terraform
+[submodule "base/files/.vim/bundle/vim-terraform"]
+	path = base/files/.vim/bundle/vim-terraform
 	url = https://github.com/hashivim/vim-terraform.git
 
-[submodule "macosx/files/.vim/bundle/vim-yaml"]
-	path = macosx/files/.vim/bundle/vim-yaml
+[submodule "base/files/.vim/bundle/vim-yaml"]
+	path = base/files/.vim/bundle/vim-yaml
 	url = https://github.com/stephpy/vim-yaml.git

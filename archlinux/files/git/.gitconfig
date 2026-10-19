@@ -1,7 +1,0 @@
-[user]
-	name = Manny Jois
-	email = m.k.jois@gmail.com
-[push]
-	default = simple
-[core]
-	autocrlf = input
