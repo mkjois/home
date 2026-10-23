@@ -190,16 +190,18 @@ fi
 
 # Super awesome custom prompt with all kinds of information.
 set_prompt() {
-    _last="$(printf '%03d' $?)"
+    local _last="$(printf '%03d' $?)"
     _time_cmd_end="$(date +%s)"
     _time_cmd_diff="$((${_time_cmd_end} - ${_time_cmd_start_1}))"
+    local _env='' ; test -n "${ENV}" && _env="[${ENV}]"
+    local _branch="$(__git_ps1 "[%s]" || echo '')"
 
     PS1=''
     [[ ${_last} == "000" ]] && PS1+="\[$NGreen\]" || PS1+="\[$NRed\]"
     PS1+="${_last} \[$NCyan\]${_time_cmd_diff}s "
     [[ ${EUID} == 0 ]] && PS1+="\[$BRed\]" || PS1+="\[$BGreen\]"
-    _branch="$(__git_ps1 "[%s]" || echo '')"
-    PS1+="\u\[$NYellow\]@${HOSTNAME%%.*} \[$BPurple\]$_branch\[$BBlue\]\w\n"
+    PS1+="\u\[$NYellow\]@${HOSTNAME%%.*} "
+    PS1+="\[$BPurple\]${_env}${_branch}\[$BBlue\]\w\n"
     [[ ${EUID} == 0 ]] && PS1+="\[$BRed\]" || PS1+="\[$BGreen\]"
     PS1+="\$ \[$BBlack\]"
     [[ ${EUID} == 0 ]] && PS2="\[$BRed\]> \[$BBlack\]" || PS2="\[$BGreen\]> \[$BBlack\]"
@@ -384,6 +386,7 @@ set +a
 
 alias g="echo -e '\n===== BRANCHES =====\n' && git branch && echo -e '\n===== LATEST =====\n' && git --no-pager log -n 2 && echo -e '\n===== STATUS =====\n' && git status -sb && echo"
 alias gd='git diff'
+alias gdm='git diff -- . ":(exclude)*_test.go"'
 alias gp='gpg --sign -u "${EMAIL_FOR_GITHUB}" -o /dev/null ~/.gitmessage'
 alias rgl='rm -rfv ~/.go'
 alias rml='rm -rfv ~/.m2'
