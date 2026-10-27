@@ -391,6 +391,7 @@ alias gp='gpg --sign -u "${EMAIL_FOR_GITHUB}" -o /dev/null ~/.gitmessage'
 alias rgl='rm -rfv ~/.go'
 alias rml='rm -rfv ~/.m2'
 alias sb='source ~/.bashrc'
+alias sl='screen-lock'
 
 # Brew convenience
 alias upcask="brew outdated --cask --greedy --quiet | sort"

@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+
+# Standard bash preamble.
+#
+set -ETeuo pipefail
+err_echo() { echo -e "$1" >&2; }
+err_exit() { err_echo "$2"; exit $1; }
+on_exit() { exit_code=$?; if test ${exit_code} -ne 0; then err_echo '\nFailed'; fi; }
+trap on_exit EXIT
+
+
+# Sets the three timeouts on the System Settings "Lock Screen" pane to "Never", or back to 5 minutes,
+# then opens that pane:
+#
+#   - Turn display off on battery when inactive         (pmset -b displaysleep, in minutes)
+#   - Turn display off on power adapter when inactive   (pmset -c displaysleep, in minutes)
+#   - Require password after screen saver begins or     (sysadminctl -screenLock, in seconds)
+#     display is turned off
+#
+#   screen-lock      ->  Never
+#   screen-lock 5    ->  5 minutes
+#
+# As in System Settings, changing these needs authorisation: pmset runs under sudo (Touch ID or your
+# password), and sysadminctl asks for your login password. A setting that already has the wanted
+# value is left alone, so it doesn't prompt.
+
+if test "$(uname -s)" != Darwin; then
+    err_exit 1 "$(basename "$0") only runs on macOS"
+fi
+
+usage="Usage: $(basename "$0") [5]
+
+With no argument, sets the Lock Screen display-off and require-password timeouts to Never.
+With 5, sets them to 5 minutes."
+
+if test $# -eq 0; then
+    minutes=0
+elif test $# -eq 1 && test "$1" = 5; then
+    minutes=5
+else
+    err_exit 2 "${usage}"
+fi
+
+if test ${minutes} -eq 0; then
+    label="Never"
+    lock="off"
+else
+    label="${minutes} minutes"
+    lock="$((minutes * 60))"
+fi
+
+changed=false
+
+# Prints the displaysleep value from one section of `pmset -g custom`, e.g. "AC Power:", or nothing
+# if this Mac has no such section (a desktop Mac has no "Battery Power:").
+display_sleep() {
+    pmset -g custom | awk -v section="$1" '/^[^ ]/ { in_section = ($0 == section) }
+        in_section && $1 == "displaysleep" { print $2 }'
+}
+
+# Succeeds if the require-password delay already matches $lock.
+screen_lock_matches() {
+    local status
+    status="$(sysadminctl -screenLock status 2>&1)"
+    if test "${lock}" = off; then
+        grep -qw off <<< "${status}"
+    else
+        grep -q "delay is ${lock} seconds" <<< "${status}"
+    fi
+}
+
+# Require password after screen saver begins or display is turned off.
+if screen_lock_matches; then
+    echo "Require password: already ${label}"
+else
+    echo "Require password: setting to ${label} (enter your login password)"
+    # sysadminctl can exit 0 on a wrong password, so check the result rather than the exit code.
+    sysadminctl -screenLock "${lock}" -password - || true
+    screen_lock_matches || err_exit 1 "Require password: failed to set to ${label}"
+    changed=true
+fi
+
+# Turn display off on battery / power adapter when inactive.
+for side in "b:Battery Power:battery" "c:AC Power:power adapter"; do
+    IFS=: read -r flag section name <<< "${side}"
+    current="$(display_sleep "${section}:")"
+    if test -z "${current}"; then
+        echo "Display off on ${name}: not available on this Mac"
+    elif test "${current}" -eq ${minutes}; then
+        echo "Display off on ${name}: already ${label}"
+    else
+        echo "Display off on ${name}: setting to ${label}"
+        sudo pmset "-${flag}" displaysleep ${minutes}
+        test "$(display_sleep "${section}:")" -eq ${minutes} \
+            || err_exit 1 "Display off on ${name}: failed to set to ${label}"
+        changed=true
+    fi
+done
+
+lock_pane="com.apple.Lock-Screen-Settings.extension"
+settings_app='application id "com.apple.systempreferences"'
+
+settings_running() { test "$(osascript -e "${settings_app} is running")" = true; }
+
+# Once System Settings has loaded the Lock Screen pane, it doesn't notice pmset changes and keeps
+# showing the old values, even after switching away from the pane and back. So after a change,
+# quit it (as with ⌘Q) before reopening the pane. Quitting needs Automation permission, which
+# macOS asks for the first time; if it's refused, System Settings is left running.
+if ${changed} && settings_running; then
+    if osascript -e "tell ${settings_app} to quit"; then
+        for _ in {1..50}; do
+            settings_running || break
+            sleep 0.1
+        done
+    else
+        err_echo "Couldn't quit System Settings, so the Lock Screen pane may show old values"
+    fi
+fi
+
+# Opening the pane's URL launches System Settings on the Lock Screen pane, or brings it to the front
+# and switches to that pane if it's already running.
+open "x-apple.systempreferences:${lock_pane}"
