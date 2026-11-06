@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+# Standard bash preamble.
+#
+set -ETeuo pipefail
+err_echo() { echo -e "$1" >&2; }
+err_exit() { err_echo "$2"; exit $1; }
+on_exit() { exit_code=$?; if test ${exit_code} -ne 0; then err_echo '\nFailed'; fi; }
+trap on_exit EXIT
+
+
+# A controlled `git clone`: shallow and single-branch unless told otherwise, and set up to fetch
+# tags into refs/tags on later fetches.
+#
+#   git-trunk <url>                  ->  git clone --depth 5 --single-branch <url>
+#   git-trunk <url> --depth 20       ->  git clone --depth 20 --single-branch <url>
+#   git-trunk <url> -b dev --no-single-branch  ->  git clone -b dev --no-single-branch --depth 5 <url>
+#   git-trunk <url> -- <dir>         ->  git clone --depth 5 --single-branch <url> <dir>
+
+usage="Usage: $(basename "$0") <url> [--depth <n>] [git clone options...] [-- <dir>]
+
+Clones <url> with --depth 5 and --single-branch unless a depth or --[no-]single-branch is given,
+then adds a fetch refspec for tags to the clone's origin remote. Clones into <dir> if given,
+otherwise into the URL's basename."
+
+if test $# -eq 0 || test "$1" = -h || test "$1" = --help; then
+    err_exit 2 "${usage}"
+fi
+
+clone_url="$1"
+shift
+
+clone_dir="$(basename "${clone_url}" .git)"
+args=()
+has_depth=false
+has_single_branch=false
+
+while test $# -gt 0; do
+    case "$1" in
+        --depth)
+            if test $# -lt 2; then
+                err_exit 2 "Option '$1' needs an argument\n\n${usage}"
+            fi
+            args+=(--depth "$2")
+            has_depth=true
+            shift 2
+            ;;
+        --depth=*)
+            args+=("$1")
+            has_depth=true
+            shift
+            ;;
+        --single-branch|--no-single-branch)
+            args+=("$1")
+            has_single_branch=true
+            shift
+            ;;
+        --)
+            if test $# -ne 2; then
+                err_exit 2 "'--' needs exactly one directory after it\n\n${usage}"
+            fi
+            clone_dir="$2"
+            shift 2
+            ;;
+        *)
+            args+=("$1")
+            shift
+            ;;
+    esac
+done
+
+if test "${has_depth}" = false; then
+    args+=(--depth 5)
+fi
+if test "${has_single_branch}" = false; then
+    args+=(--single-branch)
+fi
+
+git clone "${args[@]}" -- "${clone_url}" "${clone_dir}"
+cd "${clone_dir}"
+git config --add remote.origin.fetch '+refs/tags/*:refs/tags/*'
