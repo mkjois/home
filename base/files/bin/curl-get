@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+# Standard bash preamble.
+#
+set -ETeuo pipefail
+err_echo() { echo -e "$1" >&2; }
+err_exit() { err_echo "$2"; exit $1; }
+on_exit() { exit_code=$?; if test ${exit_code} -ne 0; then err_echo '\nFailed'; fi; }
+trap on_exit EXIT
+
+# Only command-line options are checked; curl's default configuration is still loaded unless -q is supplied.
+args=(--proto '=http,https' --proto-redir '=http,https')
+url=
+while (( $# )); do
+    case "$1" in
+        -q|--disable)
+            # curl only honors this option before all other arguments.
+            args=(-q "${args[@]}")
+            shift
+            ;;
+        -s|-S|-sS|-Ss|-f|-v|-i|-L|-G|--silent|--show-error|--fail|--fail-with-body|\
+        --verbose|--include|--location|--get|--compressed)
+            args+=("$1")
+            shift
+            ;;
+        -H|-u|-m|-o|--header|--user|--oauth2-bearer|--connect-timeout|--max-time|\
+        --url-query|--output|--data-urlencode|--data-raw)
+            if (( $# < 2 )) || [[ "$2" == -* ]]; then
+                err_exit 2 "$1 requires a value; use --option=VALUE if it starts with a dash"
+            fi
+            args+=("$1" "$2")
+            shift 2
+            ;;
+        --header=*|--user=*|--oauth2-bearer=*|--connect-timeout=*|--max-time=*|\
+        --url-query=*|--output=*|--data-urlencode=*|--data-raw=*)
+            args+=("$1")
+            shift
+            ;;
+        http://*|https://*)
+            [[ -z "$url" ]] || err_exit 2 'Only one URL is allowed'
+            url=$1
+            shift
+            ;;
+        *)
+            err_exit 2 "Unsupported argument: $1"
+            ;;
+    esac
+done
+
+[[ -n "$url" ]] || err_exit 2 'An http:// or https:// URL is required'
+exec curl "${args[@]}" -X GET --url "$url"

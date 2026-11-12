@@ -1,0 +1,7 @@
+prefix_rule(pattern=["go", "test"], decision="allow")
+prefix_rule(pattern=["go", "fmt"], decision="allow")
+prefix_rule(pattern=["go", "vet"], decision="allow")
+prefix_rule(pattern=["git", "diff"], decision="allow")
+prefix_rule(pattern=["curl-get"], decision="allow")
+prefix_rule(pattern=["/Users/mj/bin/curl-get"], decision="allow")
+prefix_rule(pattern=["/Users/mj/src/github.com/mkjois/home/base/files/bin/curl-get"], decision="allow")

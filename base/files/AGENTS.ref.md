@@ -30,6 +30,18 @@
   builds, Kubernetes `apply`, Helm upgrades, deployments, restarts, and equivalent operations.
 - Do not infer permission to mutate from a request to investigate, diagnose, review, or plan.
 
+## Routine command approvals
+
+- Run Go formatting, vetting, tests, HTTP GET requests, and Git diffs as individual commands using
+  `go fmt`, `go vet`, `go test`, `curl-get`, and `git diff`, respectively.
+- These commands have standing approval; do not ask for conversational confirmation before running them.
+  Codex's general command allow rules live in `~/.codex/rules/personal.rules`, linked from the home-files repo.
+  Work-specific and automatically saved approvals stay in the local, untracked `~/.codex/rules/default.rules`.
+- Use `curl-get` from `~/bin` for HTTP GET requests, including GET requests with bodies. Use its supported
+  options and preserve request semantics. Do not substitute unrestricted `curl` just to bypass its allowlist.
+- Keep these invocations separate from shell pipelines, command chains, and unnecessary shell wrappers so
+  Codex can match the approved command prefixes. Runtime permission restrictions still apply.
+
 ## Optional work instructions
 
 - Before starting work, check whether `~/.config/ai/AGENTS.work.md` exists.
