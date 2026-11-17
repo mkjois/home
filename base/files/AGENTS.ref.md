@@ -19,6 +19,28 @@
   what `HEAD` points at. Work on the current branch. For a read-only look at the remote, use
   `git ls-remote` or `gh api`, which change no local refs.
 
+## Keep tests and documentation separate during review
+
+- Validate implementation changes with appropriate tests as usual, but initially keep new or modified
+  tests outside the repository working tree. Keep them in a session-specific scratch directory,
+  structured so they can be moved into the codebase later.
+- Run those tests against the implementation being reviewed. Keep any temporary test changes needed
+  to run them out of the final working-tree diff, and preserve existing user changes.
+- Keep the implementation diff focused so I can read and understand it first.
+- After making implementation changes, report the location and results of private validation tests
+  in a distinct "Validation" section, separate from the implementation explanation so I can skip it.
+  Include this section only when there is new validation information relevant to those changes;
+  omit it from unrelated replies and do not repeat unchanged results.
+- Move tests into the repository only when I ask. I may request specific tests early to help me
+  understand the implementation; keep individual tests ready to move independently.
+- When I ask to bring tests into the repository, select tests that protect meaningful behavior,
+  regressions, and important edge cases. Do not automatically copy every exploratory or glass-box
+  test, or tests that merely mirror obvious implementation details.
+- Apply the same separation to README and other documentation changes: prepare them outside the
+  working tree and incorporate them when requested.
+- An explicit request to create or update repository tests or documentation authorizes those changes
+  directly; do not defer the work that is itself the task.
+
 ## External resources are read-only by default
 
 - Never mutate an external resource without my explicit permission. Inspection and other
@@ -32,15 +54,21 @@
 
 ## Routine command approvals
 
-- Run Go formatting, vetting, tests, HTTP GET requests, and Git diffs as individual commands using
-  `go fmt`, `go vet`, `go test`, `curl-get`, and `git diff`, respectively.
+- Prefer individual commands whose first arguments are exactly `go fmt`, `go vet`, `go test`, `curl-get`,
+  or `git diff`, as appropriate. Put flags and other arguments after the approved prefix so Codex can match it
+  and grant automatic permission when the allow rules are loaded.
 - These commands have standing approval; do not ask for conversational confirmation before running them.
-  Codex's general command allow rules live in `~/.codex/rules/personal.rules`, linked from the home-files repo.
-  Work-specific and automatically saved approvals stay in the local, untracked `~/.codex/rules/default.rules`.
+  Codex's general command allow rules live in `~/.codex/rules/personal.rules`, copied from the home-files repo
+  by its installer. Work-specific and automatically saved approvals live in the local, untracked
+  `~/.codex/rules/default.rules`.
+- Prefix rules match whole command arguments, not arbitrary text at the start of a shell script. Avoid
+  unnecessary `bash -lc` / `zsh -lc` wrappers, leading environment assignments, and `cd ... &&` prefixes.
+  Use the execution tool's working-directory option when a command needs to run in another directory.
+- Where practical, keep approved commands separate from pipelines, command chains, redirections, and shell
+  expansions. These can prevent prefix matching or introduce additional commands that need their own approval.
+  Preserve the intended behavior; matching a prefix does not override runtime permission restrictions.
 - Use `curl-get` from `~/bin` for HTTP GET requests, including GET requests with bodies. Use its supported
   options and preserve request semantics. Do not substitute unrestricted `curl` just to bypass its allowlist.
-- Keep these invocations separate from shell pipelines, command chains, and unnecessary shell wrappers so
-  Codex can match the approved command prefixes. Runtime permission restrictions still apply.
 
 ## Optional work instructions
 
